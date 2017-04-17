@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.yirendai.oss.lib.histrix.spring.config.HystrixAutoConfiguration

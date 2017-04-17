@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.yirendai.oss.lib.adminclient.starter.AdminClientAutoConfiguration,\
-com.yirendai.oss.lib.adminclient.starter.ConfigServerPostProcessor
