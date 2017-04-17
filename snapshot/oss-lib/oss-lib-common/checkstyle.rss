@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>oss-lib-common - Checkstyle report</title>
+    <link>https://github.com/home1-oss/oss-lib/oss-lib-common</link>
+    <description>oss-lib-common - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2017</copyright>
+    <item>
+      <title>File: 64,
+             Errors: 0,
+             Warnings: 1,
+             Infos: 0
+      </title>
+            <link>https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html</link>
+      <description>
+        <p>Click <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.StringUtils.java">com/yirendai/oss/lib/common/StringUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.OnNotEnvProductionCondition.java">com/yirendai/oss/boot/autoconfigure/OnNotEnvProductionCondition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.CodecUtils.java">com/yirendai/oss/lib/common/CodecUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.Cryptos.java">com/yirendai/oss/lib/common/crypto/Cryptos.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.BasicAuthUtils.java">com/yirendai/oss/lib/common/BasicAuthUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.Jackson2Utils.java">com/yirendai/oss/lib/common/Jackson2Utils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.Jackson2HackedJaxbAnnotationIntrospector.java">com/yirendai/oss/lib/common/Jackson2HackedJaxbAnnotationIntrospector.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.Defaults.java">com/yirendai/oss/lib/common/Defaults.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#git.properties">git.properties</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.Rsa.java">com/yirendai/oss/lib/common/crypto/Rsa.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.msginterpolate.SpelMessageInterpolator.java">com/yirendai/oss/lib/common/msginterpolate/SpelMessageInterpolator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppType.java">com/yirendai/oss/boot/autoconfigure/AppType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppErrorProperties.java">com/yirendai/oss/boot/autoconfigure/AppErrorProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.msginterpolate.MessageInterpolatorAware.java">com/yirendai/oss/lib/common/msginterpolate/MessageInterpolatorAware.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.Pkcs7Encoder.java">com/yirendai/oss/lib/common/crypto/Pkcs7Encoder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.JaxbMapAdapter.java">com/yirendai/oss/lib/common/JaxbMapAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.PathUtils.java">com/yirendai/oss/boot/autoconfigure/PathUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.RsaKey.java">com/yirendai/oss/lib/common/crypto/RsaKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.JaxbMapWrapper.java">com/yirendai/oss/lib/common/JaxbMapWrapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.KeyExpression.java">com/yirendai/oss/lib/common/crypto/KeyExpression.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.msginterpolate.NoOpMessageInterpolator.java">com/yirendai/oss/lib/common/msginterpolate/NoOpMessageInterpolator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.EncodeCipher.java">com/yirendai/oss/lib/common/crypto/EncodeCipher.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppLogProperties.java">com/yirendai/oss/boot/autoconfigure/AppLogProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.AesCbcKey.java">com/yirendai/oss/lib/common/crypto/AesCbcKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.RsaKeyGenerator.java">com/yirendai/oss/lib/common/crypto/RsaKeyGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.AesKeyGenerator.java">com/yirendai/oss/lib/common/crypto/AesKeyGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.ConditionalOnNotEnvProduction.java">com/yirendai/oss/boot/autoconfigure/ConditionalOnNotEnvProduction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.RandomString.java">com/yirendai/oss/lib/common/crypto/RandomString.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.OnAppSecurityCondition.java">com/yirendai/oss/boot/autoconfigure/OnAppSecurityCondition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.CryptoConstants.java">com/yirendai/oss/lib/common/crypto/CryptoConstants.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.msginterpolate.MessageInterpolator.java">com/yirendai/oss/lib/common/msginterpolate/MessageInterpolator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppSecurityProperties.java">com/yirendai/oss/boot/autoconfigure/AppSecurityProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.MapUtils.java">com/yirendai/oss/lib/common/MapUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.JaxbUtils.java">com/yirendai/oss/lib/common/JaxbUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.DateTimeFormatterWrapper.java">com/yirendai/oss/lib/common/DateTimeFormatterWrapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.JwtDecryptor.java">com/yirendai/oss/lib/common/crypto/JwtDecryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.ConditionalOnAppType.java">com/yirendai/oss/boot/autoconfigure/ConditionalOnAppType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppSecurity.java">com/yirendai/oss/boot/autoconfigure/AppSecurity.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.KeyGenerator.java">com/yirendai/oss/lib/common/crypto/KeyGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.Jwt.java">com/yirendai/oss/lib/common/crypto/Jwt.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.SpringSecurityJackson2Module.java">com/yirendai/oss/lib/common/SpringSecurityJackson2Module.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.RsaDecryptor.java">com/yirendai/oss/lib/common/crypto/RsaDecryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.FileAndClasspathUtils.java">com/yirendai/oss/lib/common/FileAndClasspathUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.EncodeEncryptor.java">com/yirendai/oss/lib/common/crypto/EncodeEncryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppUtils.java">com/yirendai/oss/boot/autoconfigure/AppUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.DiscoverableEnums.java">com/yirendai/oss/lib/common/DiscoverableEnums.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.AesDecryptor.java">com/yirendai/oss/lib/common/crypto/AesDecryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.ResourceUtils.java">com/yirendai/oss/lib/common/ResourceUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.AesException.java">com/yirendai/oss/lib/common/crypto/AesException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.DiscoverableEnum.java">com/yirendai/oss/lib/common/DiscoverableEnum.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.EncodeDecryptor.java">com/yirendai/oss/lib/common/crypto/EncodeDecryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.ConditionalOnAppSecurity.java">com/yirendai/oss/boot/autoconfigure/ConditionalOnAppSecurity.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.AppProperties.java">com/yirendai/oss/boot/autoconfigure/AppProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.RsaEncryptor.java">com/yirendai/oss/lib/common/crypto/RsaEncryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.JwtKeyGenerator.java">com/yirendai/oss/lib/common/crypto/JwtKeyGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.Aes.java">com/yirendai/oss/lib/common/crypto/Aes.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.JwtEncryptor.java">com/yirendai/oss/lib/common/crypto/JwtEncryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.Jackson2Configurator.java">com/yirendai/oss/lib/common/Jackson2Configurator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.boot.autoconfigure.OnAppTypeCondition.java">com/yirendai/oss/boot/autoconfigure/OnAppTypeCondition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.GsonUtils.java">com/yirendai/oss/lib/common/GsonUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.CurlUtils.java">com/yirendai/oss/lib/common/CurlUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.JwtKey.java">com/yirendai/oss/lib/common/crypto/JwtKey.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.RequestUtlis.java">com/yirendai/oss/lib/common/RequestUtlis.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/home1-oss/oss-lib/oss-lib-common/checkstyle.html#com.yirendai.oss.lib.common.crypto.AesEncryptor.java">com/yirendai/oss/lib/common/crypto/AesEncryptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
