@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseEntityDecoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-test</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.test</a> &gt; <span class="el_source">ResponseEntityDecoder.java</span></div><h1>ResponseEntityDecoder.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.test;
+
+import feign.FeignException;
+import feign.Response;
+import feign.codec.Decoder;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Decoder adds compatibility for Spring MVC's ResponseEntity to any other decoder via composition.
+ *
+ * @author chadjaros
+ */
+public class ResponseEntityDecoder implements Decoder {
+
+  private final Decoder decoder;
+
+<span class="nc" id="L29">  public ResponseEntityDecoder(final Decoder decoder) {</span>
+<span class="nc" id="L30">    this.decoder = decoder;</span>
+<span class="nc" id="L31">  }</span>
+
+  @Override
+  public Object decode(final Response response, final Type type) throws IOException, FeignException {
+    final Object ret;
+<span class="nc bnc" id="L36" title="All 2 branches missed.">    if (isParameterizeHttpEntity(type)) {</span>
+<span class="nc" id="L37">      final Type type_ = ((ParameterizedType) type).getActualTypeArguments()[0];</span>
+<span class="nc" id="L38">      final Object decodedObject = decoder.decode(response, type_);</span>
+<span class="nc" id="L39">      ret = createResponse(decodedObject, response);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">    } else if (isHttpEntity(type)) {</span>
+<span class="nc" id="L41">      ret = createResponse(null, response);</span>
+    } else {
+<span class="nc" id="L43">      ret = decoder.decode(response, type);</span>
+    }
+<span class="nc" id="L45">    return ret;</span>
+  }
+
+  private boolean isParameterizeHttpEntity(final Type type) {
+<span class="nc" id="L49">    boolean ret = false;</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">    if (type instanceof ParameterizedType) {</span>
+<span class="nc" id="L51">      ret = isHttpEntity(((ParameterizedType) type).getRawType());</span>
+    }
+<span class="nc" id="L53">    return ret;</span>
+  }
+
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  private boolean isHttpEntity(final Type type) {
+<span class="nc" id="L58">    boolean ret = false;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">    if (type instanceof Class) {</span>
+<span class="nc" id="L60">      final Class c = (Class) type;</span>
+<span class="nc" id="L61">      ret = HttpEntity.class.isAssignableFrom(c);</span>
+    }
+<span class="nc" id="L63">    return ret;</span>
+  }
+
+  @SuppressWarnings({&quot;unchecked&quot;})
+  private &lt;T&gt; ResponseEntity&lt;T&gt; createResponse(final Object instance, final Response response) {
+
+<span class="nc" id="L69">    final MultiValueMap&lt;String, String&gt; headers = new LinkedMultiValueMap&lt;&gt;();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">    for (final String key : response.headers().keySet()) {</span>
+<span class="nc" id="L71">      headers.put(key, createLintedList(response.headers().get(key)));</span>
+<span class="nc" id="L72">    }</span>
+
+<span class="nc" id="L74">    return new ResponseEntity&lt;&gt;((T) instance, headers, HttpStatus.valueOf(response.status()));</span>
+  }
+
+  &lt;T&gt; List&lt;T&gt; createLintedList(final Collection&lt;T&gt; type) {
+<span class="nc" id="L78">    return new LinkedList&lt;&gt;(type);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
