@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JaxbUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">JaxbUtils.java</span></div><h1>JaxbUtils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static com.google.common.collect.Maps.newLinkedHashMap;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+
+import org.joda.time.DateTime;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+import java.io.StringReader;
+import java.util.Map;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.transform.stream.StreamSource;
+
+
+public final class JaxbUtils {
+
+<span class="nc" id="L24">  private JaxbUtils() {</span>
+<span class="nc" id="L25">  }</span>
+
+  /**
+   * jaxb2 marshaller.
+   *
+   * @return jaxb2 marshaller
+   */
+  public static Jaxb2Marshaller jaxb2Marshaller() {
+<span class="nc" id="L33">    final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();</span>
+    // marshaller.setPackagesToScan(&quot;&quot;);
+<span class="nc" id="L35">    final Map&lt;String, Object&gt; properties = newLinkedHashMap();</span>
+<span class="nc" id="L36">    properties.put(Marshaller.JAXB_ENCODING, Defaults.UTF_8.name());</span>
+<span class="nc" id="L37">    properties.put(Marshaller.JAXB_FORMATTED_OUTPUT, FALSE);</span>
+<span class="nc" id="L38">    properties.put(Marshaller.JAXB_FRAGMENT, TRUE);</span>
+<span class="nc" id="L39">    marshaller.setMarshallerProperties(properties);</span>
+<span class="nc" id="L40">    return marshaller;</span>
+  }
+
+  /**
+   * unmarshal.
+   *
+   * @param marshaller marshaller
+   * @param xml        xml
+   * @param type       type
+   * @param &lt;T&gt;        type
+   * @return object
+   */
+<span class="nc" id="L52">  @SneakyThrows</span>
+  public static &lt;T&gt; T unmarshal(final Jaxb2Marshaller marshaller, final String xml,
+    final Class&lt;T&gt; type) {
+<span class="nc" id="L55">    final JAXBElement&lt;T&gt; element = marshaller.getJaxbContext().createUnmarshaller()</span>
+<span class="nc" id="L56">      .unmarshal(new StreamSource(new StringReader(xml)), type);</span>
+<span class="nc" id="L57">    return element.getValue();</span>
+  }
+
+<span class="nc" id="L60">  @NoArgsConstructor</span>
+  public static class DatimeAdapter extends XmlAdapter&lt;String, DateTime&gt; {
+
+    @Override
+    public DateTime unmarshal(String s) throws Exception {
+<span class="nc" id="L65">      return new DateTime(s, Defaults.UTC_P8);</span>
+    }
+
+    @Override
+    public String marshal(DateTime date) throws Exception {
+<span class="nc" id="L70">      return Defaults.ISO8601.print(date);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AesCbcKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">AesCbcKey.java</span></div><h1>AesCbcKey.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.ALGO_AES;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.UNDERSCORE;
+import static java.lang.Integer.parseInt;
+
+import com.yirendai.oss.lib.common.CodecUtils;
+import com.yirendai.oss.lib.common.crypto.AesException.AesError;
+
+import lombok.Getter;
+
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * Created by zhanghaolun on 16/11/17.
+ */
+public class AesCbcKey {
+
+  public static final String AES_MODE_CBC = &quot;CBC&quot;;
+
+<span class="nc" id="L23">  @Getter</span>
+  private final KeyExpression keyExpression;
+<span class="fc" id="L25">  @Getter</span>
+  private final SecretKeySpec keySpec;
+<span class="fc" id="L27">  @Getter</span>
+  private final IvParameterSpec cbcIv;
+<span class="nc" id="L29">  @Getter</span>
+  private final int cbcIvLength;
+
+<span class="fc" id="L32">  public AesCbcKey(final KeyExpression keyExpression) {</span>
+<span class="fc" id="L33">    this.keyExpression = keyExpression;</span>
+
+<span class="fc" id="L35">    final String spec = keyExpression.getSpec();</span>
+<span class="fc" id="L36">    final int keySize = keySize(spec);</span>
+<span class="fc" id="L37">    final int cbcIvLength = cbcIvLength(spec);</span>
+
+<span class="fc" id="L39">    final String key = keyExpression.getValue();</span>
+<span class="fc" id="L40">    checkArgument(key.endsWith(&quot;=&quot;), &quot;must ends with '='&quot;);</span>
+
+<span class="fc" id="L42">    final byte[] keyBytes = CodecUtils.decodeBase64(key);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">    checkArgument(keyBytes.length * 8 == keySize, AesError.ILLEGAL_AES_KEY);</span>
+
+<span class="fc" id="L45">    this.keySpec = new SecretKeySpec(keyBytes, ALGO_AES);</span>
+    // first cbcIvLength bytes
+<span class="fc" id="L47">    this.cbcIv = new IvParameterSpec(keyBytes, 0, cbcIvLength);</span>
+    //this.cbcIv = new IvParameterSpec(java.util.Arrays.copyOfRange(aesKey, 0, randomStringLength));
+<span class="fc" id="L49">    this.cbcIvLength = cbcIvLength;</span>
+<span class="fc" id="L50">  }</span>
+
+  public AesCbcKey(final String keyExpression) {
+<span class="nc" id="L53">    this(new KeyExpression(keyExpression));</span>
+<span class="nc" id="L54">  }</span>
+
+  @Override
+  public String toString() {
+<span class="nc" id="L58">    return this.keyExpression.toString();</span>
+  }
+
+  public static int keySize(final String spec) {
+<span class="fc" id="L62">    return parseInt(spec.split(UNDERSCORE)[0].substring(3));</span>
+  }
+
+  public static String keySpec(final int keySize) {
+<span class="fc" id="L66">    return CryptoConstants.ALGO_AES + keySize + UNDERSCORE + AES_MODE_CBC + 16;</span>
+  }
+
+  public static int cbcIvLength(final String spec) {
+<span class="fc" id="L70">    return parseInt(spec.substring(spec.indexOf(AES_MODE_CBC) + 3));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

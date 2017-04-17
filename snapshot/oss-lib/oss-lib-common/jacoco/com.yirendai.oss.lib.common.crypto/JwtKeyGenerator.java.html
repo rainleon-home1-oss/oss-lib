@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtKeyGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">JwtKeyGenerator.java</span></div><h1>JwtKeyGenerator.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.yirendai.oss.lib.common.CodecUtils;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+
+import lombok.Getter;
+
+/**
+ * Created by zhanghaolun on 16/10/29.
+ */
+public class JwtKeyGenerator implements KeyGenerator {
+
+<span class="nc" id="L17">  @Getter</span>
+  private final String spec;
+<span class="nc" id="L19">  @Getter</span>
+  private KeyExpression key;
+
+<span class="fc" id="L22">  public JwtKeyGenerator(final String spec) {</span>
+<span class="fc" id="L23">    this.spec = spec;</span>
+<span class="fc" id="L24">  }</span>
+
+  @Override
+  public KeyExpression generateKey() {
+<span class="fc" id="L28">    return JwtKeyGenerator.generateJwtKey(this.spec);</span>
+  }
+
+  @Override
+  public KeyExpression getKey(final String spec) {
+<span class="nc" id="L33">    checkArgument(this.spec.equals(spec), &quot;spec &quot; + spec + &quot; not supported.&quot;);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">    if (this.key == null) {</span>
+<span class="nc" id="L35">      this.key = this.generateKey();</span>
+    }
+<span class="nc" id="L37">    return this.key;</span>
+  }
+
+  /**
+   * generate JWT key
+   *
+   * @param spec eg: SignatureAlgorithm.HS512.getValue()
+   * @return JWT base64EncodedKeyBytes
+   */
+  public static KeyExpression generateJwtKey(final String spec) {
+<span class="fc" id="L47">    final String signatureAlgorithmName = &quot;&quot; + spec;</span>
+<span class="fc" id="L48">    final SignatureAlgorithm algorithm = SignatureAlgorithm.forName(signatureAlgorithmName);</span>
+<span class="fc" id="L49">    return new KeyExpression( //</span>
+      spec, //
+<span class="fc" id="L51">      CodecUtils.encodeBase64(MacProvider.generateKey(algorithm).getEncoded()) //</span>
+    );
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

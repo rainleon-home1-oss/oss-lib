@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AesException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">AesException.java</span></div><h1>AesException.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import lombok.Getter;
+
+@SuppressWarnings(&quot;serial&quot;)
+public class AesException extends RuntimeException {
+
+<span class="nc" id="L8">  @Getter</span>
+  private final AesError aesError;
+
+  AesException(final AesError aesError) {
+<span class="nc" id="L12">    super(aesError.getMessage());</span>
+<span class="nc" id="L13">    this.aesError = aesError;</span>
+<span class="nc" id="L14">  }</span>
+
+  AesException(final AesError aesError, final Throwable cause) {
+<span class="nc" id="L17">    super(aesError.getMessage(), cause);</span>
+<span class="nc" id="L18">    this.aesError = aesError;</span>
+<span class="nc" id="L19">  }</span>
+
+  /**
+   * AES error.
+   * 
+   * @author zhanghaolun
+   */
+<span class="pc" id="L26">  @SuppressWarnings(&quot;PMD.SingularField&quot;)</span>
+  @Getter
+  public enum AesError {
+
+<span class="fc" id="L30">    OK(0, &quot;&quot;),</span>
+<span class="fc" id="L31">    VALIDATE_SIGNATURE_ERROR(-40001, &quot;签名验证错误&quot;),</span>
+<span class="fc" id="L32">    PARSE_XML_ERROR(-40002, &quot;XML解析失败&quot;),</span>
+<span class="fc" id="L33">    COMPUTE_SIGNATURE_ERROR(-40003, &quot;SHA加密生成签名失败&quot;),</span>
+<span class="fc" id="L34">    ILLEGAL_AES_KEY(-40004, &quot;SymmetricKey非法&quot;),</span>
+<span class="fc" id="L35">    VALIDATE_CORP_ID_ERROR(-40005, &quot;corpid校验失败&quot;),</span>
+<span class="fc" id="L36">    ENCRYPT_AES_ERROR(-40006, &quot;AES加密失败&quot;),</span>
+<span class="fc" id="L37">    DECRYPT_AES_ERROR(-40007, &quot;AES解密失败&quot;),</span>
+<span class="fc" id="L38">    ILLEGAL_BUFFER(-40008, &quot;解密后得到的buffer非法&quot;);</span>
+    
+<span class="nc" id="L40">    private final int code;</span>
+<span class="nc" id="L41">    private final String message;</span>
+
+<span class="fc" id="L43">    AesError(final int code, final String message) {</span>
+<span class="fc" id="L44">      this.code = code;</span>
+<span class="fc" id="L45">      this.message = message;</span>
+<span class="fc" id="L46">    }</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

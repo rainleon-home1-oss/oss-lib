@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RsaDecryptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">RsaDecryptor.java</span></div><h1>RsaDecryptor.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.yirendai.oss.lib.common.CodecUtils;
+
+import lombok.Getter;
+import lombok.SneakyThrows;
+
+import java.security.Key;
+import java.security.Provider;
+
+import javax.crypto.Cipher;
+
+/**
+ * Created by zhanghaolun on 16/10/25.
+ */
+public class RsaDecryptor implements EncodeDecryptor {
+
+  private final Provider provider;
+<span class="fc" id="L22">  @Getter</span>
+  private final RsaKey key;
+
+<span class="fc" id="L25">  public RsaDecryptor(final Provider provider, final KeyExpression keyExpression) {</span>
+<span class="fc" id="L26">    this.provider = provider;</span>
+<span class="fc" id="L27">    this.key = new RsaKey(keyExpression);</span>
+<span class="fc" id="L28">  }</span>
+
+  @Override
+  public String decrypt(final String ciphertext) {
+<span class="fc" id="L32">    return decodeAndDecrypt(this.provider, this.key.getRsaPrivateKey(), ciphertext);</span>
+  }
+
+<span class="nc" id="L35">  @SneakyThrows</span>
+  public static byte[] decryptBytes(final Provider provider, final Key key, final byte[] binary) {
+<span class="fc" id="L37">    final Cipher cipher = Cipher.getInstance(CryptoConstants.RSA_ECB_PKCS1_PADDING, provider);</span>
+<span class="fc" id="L38">    cipher.init(Cipher.DECRYPT_MODE, key);</span>
+<span class="fc" id="L39">    return cipher.doFinal(binary);</span>
+  }
+
+<span class="nc" id="L42">  @SneakyThrows</span>
+  public static String decodeAndDecrypt(final Provider provider, final Key key, final String ciphertext) {
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">    checkArgument(key != null, &quot;key must not null&quot;);</span>
+
+    final String result;
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (ciphertext == null) {</span>
+<span class="nc" id="L48">      result = null;</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">    } else if (ciphertext.length() == 0) {</span>
+<span class="nc" id="L50">      result = &quot;&quot;;</span>
+    } else {
+<span class="fc" id="L52">      final byte[] binary = CodecUtils.decodeBase64(ciphertext);</span>
+<span class="fc" id="L53">      final byte[] decrypted = decryptBytes(provider, key, binary);</span>
+<span class="fc" id="L54">      result = new String(decrypted, UTF_8);</span>
+    }
+<span class="fc" id="L56">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

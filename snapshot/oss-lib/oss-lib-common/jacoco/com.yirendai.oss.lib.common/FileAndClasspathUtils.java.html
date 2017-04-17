@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileAndClasspathUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">FileAndClasspathUtils.java</span></div><h1>FileAndClasspathUtils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Sets.newLinkedHashSetWithExpectedSize;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ArrayUtils.contains;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import lombok.SneakyThrows;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.io.Resource;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
+import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.core.type.filter.TypeFilter;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
+public final class FileAndClasspathUtils {
+
+<span class="nc" id="L34">  private FileAndClasspathUtils() {</span>
+<span class="nc" id="L35">  }</span>
+
+  /**
+   * Create if not exists.
+   *
+   * @param fileFullPath path
+   */
+<span class="nc" id="L42">  @SneakyThrows</span>
+  public static void ensureFile(final String fileFullPath) {
+<span class="nc" id="L44">    checkState(isNotBlank(fileFullPath), &quot;file undefined. file: %s&quot;, fileFullPath);</span>
+<span class="nc" id="L45">    final File file = new File(fileFullPath);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L47">      checkState(file.createNewFile(), &quot;file create failed. file: %s&quot;, fileFullPath);</span>
+    }
+<span class="nc bnc" id="L49" title="All 4 branches missed.">    checkState(file.canRead() &amp;&amp; file.canWrite(),</span>
+      &quot;file can't read or write. file: %s&quot;, fileFullPath);
+<span class="nc" id="L51">  }</span>
+
+  /**
+   * Parse file lines.
+   *
+   * @param resource resource
+   * @param mapper   line mapper
+   * @param &lt;T&gt;      type
+   * @return list
+   */
+<span class="nc" id="L61">  @SneakyThrows</span>
+  public static &lt;T&gt; List&lt;T&gt; parseFile(final Resource resource, final Function&lt;String, T&gt; mapper) {
+<span class="nc" id="L63">    return parseFile(resource.getInputStream(), mapper);</span>
+  }
+
+  /**
+   * Parse file lines.
+   *
+   * @param inputStream stream
+   * @param mapper      line mapper
+   * @param &lt;T&gt;         type
+   * @return list
+   */
+<span class="nc" id="L74">  @SneakyThrows</span>
+  public static &lt;T&gt; List&lt;T&gt; parseFile(final InputStream inputStream, final Function&lt;String, T&gt; mapper) {
+<span class="nc" id="L76">    return IOUtils.readLines(inputStream, UTF_8).stream() //</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">      .filter(line -&gt; isNotBlank(line) &amp;&amp; line.trim().charAt(0) != '#') //</span>
+<span class="nc" id="L78">      .map(mapper) //</span>
+<span class="nc" id="L79">      .collect(toList());</span>
+  }
+
+  public static class InterfaceFilter extends AbstractClassTestingTypeFilter {
+
+    private final Class&lt;?&gt; type;
+    private final boolean includeInterface;
+
+    /**
+     * filter find types of interface type.
+     *
+     * @param type             type
+     * @param includeInterface include interface
+     */
+    public InterfaceFilter(final Class&lt;?&gt; type, final boolean includeInterface) {
+<span class="nc" id="L94">      super();</span>
+<span class="nc" id="L95">      this.type = type;</span>
+<span class="nc" id="L96">      this.includeInterface = includeInterface;</span>
+<span class="nc" id="L97">    }</span>
+
+    @Override
+    protected boolean match(final ClassMetadata metadata) {
+<span class="nc bnc" id="L101" title="All 4 branches missed.">      return contains(metadata.getInterfaceNames(), this.type.getName())</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        &amp;&amp; (this.includeInterface || !metadata.isInterface());</span>
+    }
+  }
+
+  public static class AssignableFilter extends AssignableTypeFilter {
+
+    private final boolean includeInterface;
+    private final boolean includeAbstract;
+
+    public AssignableFilter(final Class&lt;?&gt; targetType, final boolean includeInterface, final boolean includeAbstract) {
+<span class="fc" id="L112">      super(targetType);</span>
+<span class="fc" id="L113">      this.includeInterface = includeInterface;</span>
+<span class="fc" id="L114">      this.includeAbstract = includeAbstract;</span>
+<span class="fc" id="L115">    }</span>
+
+    @Override
+    public boolean match(final MetadataReader reader, final MetadataReaderFactory readerFactory) throws IOException {
+<span class="fc" id="L119">      final ClassMetadata metadata = reader.getClassMetadata();</span>
+<span class="fc" id="L120">      final boolean match = super.match(reader, readerFactory);</span>
+<span class="pc bpc" id="L121" title="1 of 4 branches missed.">      return match &amp;&amp; //</span>
+<span class="pc bpc" id="L122" title="1 of 4 branches missed.">        (this.includeInterface || !metadata.isInterface()) &amp;&amp; //</span>
+<span class="pc bnc" id="L123" title="All 2 branches missed.">        (this.includeAbstract || !metadata.isAbstract());</span>
+    }
+  }
+
+<span class="nc" id="L127">  @SneakyThrows</span>
+  @SuppressWarnings(&quot;unchecked&quot;)
+  private static &lt;T&gt; Class&lt;T&gt; classForName(final String className) {
+<span class="fc" id="L130">    return (Class&lt;T&gt;) Class.forName(className);</span>
+  }
+
+  /**
+   * scan.
+   *
+   * @param basePackage   from where (package)
+   * @param includeFilter filter
+   * @param &lt;T&gt;           type
+   * @return classes found
+   */
+  public static &lt;T&gt; Set&lt;Class&lt;T&gt;&gt; scan(final String basePackage, final TypeFilter includeFilter) {
+<span class="fc" id="L142">    checkArgument(isNotBlank(basePackage));</span>
+    // log.info(&quot;domainEnums basePackage: {}&quot;, basePackage);
+
+<span class="fc" id="L145">    final ClassPathScanningCandidateProvider provider = new ClassPathScanningCandidateProvider();</span>
+<span class="fc" id="L146">    provider.addIncludeFilter(includeFilter);</span>
+<span class="fc" id="L147">    final Set&lt;BeanDefinition&gt; beanDefinitions =</span>
+<span class="fc" id="L148">      provider.findCandidateComponents(basePackage.replaceAll(&quot;\\.&quot;, &quot;/&quot;));</span>
+
+<span class="fc" id="L150">    final Set&lt;Class&lt;T&gt;&gt; result = newLinkedHashSetWithExpectedSize(beanDefinitions.size());</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    for (final BeanDefinition beanDefinition : beanDefinitions) {</span>
+<span class="fc" id="L152">      result.add(classForName(beanDefinition.getBeanClassName()));</span>
+<span class="fc" id="L153">    }</span>
+<span class="fc" id="L154">    return result;</span>
+  }
+
+  /**
+   * A ClassPathScanningCandidateComponentProvider.
+   *
+   * @author zhanghaolun
+   */
+  public static class ClassPathScanningCandidateProvider
+    extends ClassPathScanningCandidateComponentProvider {
+
+    /**
+     * new a ClassPathScanningCandidateProvider.
+     */
+    public ClassPathScanningCandidateProvider() {
+<span class="fc" id="L169">      super(false);</span>
+<span class="fc" id="L170">    }</span>
+
+    @Override
+    protected boolean isCandidateComponent(final AnnotatedBeanDefinition beanDefinition) {
+<span class="fc" id="L174">      return beanDefinition.getMetadata().isIndependent();</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

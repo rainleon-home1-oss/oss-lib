@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cryptos.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">Cryptos.java</span></div><h1>Cryptos.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.ALGO_AES;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.ALGO_RSA;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import java.security.Provider;
+
+<span class="fc" id="L15">@Slf4j</span>
+public abstract class Cryptos {
+
+<span class="fc" id="L18">  private static final Provider BOUNCY_CASTLE_PROVIDER = new BouncyCastleProvider();</span>
+
+<span class="nc" id="L20">  private Cryptos() {</span>
+<span class="nc" id="L21">  }</span>
+
+  public static Provider provider() {
+<span class="fc" id="L24">    return BOUNCY_CASTLE_PROVIDER;</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T extends EncodeCipher&gt; T cipher(final KeyExpression keyExpression) {
+    final T result;
+<span class="nc bnc" id="L30" title="All 4 branches missed.">    if (keyExpression == null || !keyExpression.isPresent()) {</span>
+<span class="nc" id="L31">      result = null;</span>
+    } else {
+<span class="nc" id="L33">      final String spec = keyExpression.getSpec();</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">      if (spec.startsWith(ALGO_AES)) {</span>
+<span class="nc" id="L35">        result = (T) new Aes(Cryptos.provider(), keyExpression);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">      } else if (spec.startsWith(ALGO_RSA)) {</span>
+<span class="nc" id="L37">        result = (T) new Rsa(Cryptos.provider(), keyExpression);</span>
+      } else {
+<span class="nc" id="L39">        SignatureAlgorithm.forName(spec);</span>
+<span class="nc" id="L40">        result = (T) new Jwt(keyExpression);</span>
+      }
+    }
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">    if (result != null) {</span>
+<span class="nc" id="L45">      final String test = &quot;test&quot;;</span>
+      try {
+<span class="nc" id="L47">        checkArgument(test.equals(result.decrypt(result.encrypt(test))), &quot;bad cipher, test failed&quot;);</span>
+<span class="nc" id="L48">      } catch (final UnsupportedOperationException ignored) {</span>
+        // ignored
+<span class="nc" id="L50">        log.trace(&quot;unsupported cipher operation&quot;, ignored);</span>
+<span class="nc" id="L51">      }</span>
+      try {
+<span class="nc" id="L53">        checkArgument(test.equals(result.decrypt(result.encrypt(test, 3600))), &quot;bad cipher, test failed&quot;);</span>
+<span class="nc" id="L54">      } catch (final UnsupportedOperationException ignored) {</span>
+        // ignored
+<span class="nc" id="L56">        log.trace(&quot;unsupported cipher operation&quot;, ignored);</span>
+<span class="nc" id="L57">      }</span>
+    }
+
+<span class="nc" id="L60">    return result;</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T extends EncodeEncryptor&gt; T encryptor(final KeyExpression keyExpression) {
+    final T result;
+<span class="nc bnc" id="L66" title="All 4 branches missed.">    if (keyExpression == null || !keyExpression.isPresent()) {</span>
+<span class="nc" id="L67">      result = null;</span>
+    } else {
+<span class="nc" id="L69">      final String spec = keyExpression.getSpec();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">      if (spec.startsWith(ALGO_AES)) {</span>
+<span class="nc" id="L71">        result = (T) new AesEncryptor(BOUNCY_CASTLE_PROVIDER, keyExpression);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">      } else if (spec.startsWith(ALGO_RSA)) {</span>
+<span class="nc" id="L73">        result = (T) new RsaEncryptor(BOUNCY_CASTLE_PROVIDER, keyExpression);</span>
+      } else {
+<span class="nc" id="L75">        SignatureAlgorithm.forName(spec);</span>
+<span class="nc" id="L76">        result = (T) new JwtEncryptor(keyExpression);</span>
+      }
+    }
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">    if (result != null) {</span>
+      try {
+<span class="nc" id="L82">        result.encrypt(&quot;test&quot;);</span>
+<span class="nc" id="L83">      } catch (final UnsupportedOperationException ignored) {</span>
+        // ignored
+<span class="nc" id="L85">        log.trace(&quot;unsupported encryptor operation&quot;, ignored);</span>
+<span class="nc" id="L86">      }</span>
+      try {
+<span class="nc" id="L88">        result.encrypt(&quot;test&quot;, 3600);</span>
+<span class="nc" id="L89">      } catch (final UnsupportedOperationException ignored) {</span>
+        // ignored
+<span class="nc" id="L91">        log.trace(&quot;unsupported encryptor operation&quot;, ignored);</span>
+<span class="nc" id="L92">      }</span>
+    }
+
+<span class="nc" id="L95">    return result;</span>
+  }
+
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public static &lt;T extends EncodeDecryptor&gt; T decryptor(final KeyExpression keyExpression) {
+    final T result;
+<span class="nc bnc" id="L101" title="All 4 branches missed.">    if (keyExpression == null || !keyExpression.isPresent()) {</span>
+<span class="nc" id="L102">      result = null;</span>
+    } else {
+<span class="nc" id="L104">      final String spec = keyExpression.getSpec();</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">      if (spec.startsWith(ALGO_AES)) {</span>
+<span class="nc" id="L106">        result = (T) new AesDecryptor(BOUNCY_CASTLE_PROVIDER, keyExpression);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      } else if (spec.startsWith(ALGO_RSA)) {</span>
+<span class="nc" id="L108">        result = (T) new RsaDecryptor(BOUNCY_CASTLE_PROVIDER, keyExpression);</span>
+      } else {
+<span class="nc" id="L110">        SignatureAlgorithm.forName(spec);</span>
+<span class="nc" id="L111">        result = (T) new JwtDecryptor(keyExpression);</span>
+      }
+    }
+<span class="nc" id="L114">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

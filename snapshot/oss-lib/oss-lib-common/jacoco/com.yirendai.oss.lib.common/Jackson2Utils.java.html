@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jackson2Utils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">Jackson2Utils.java</span></div><h1>Jackson2Utils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static java.util.stream.Collectors.toSet;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.util.ClassUtils;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.function.Function;
+
+/**
+ * Created by zhanghaolun on 16/6/9.
+ */
+<span class="fc" id="L22">@Slf4j</span>
+public final class Jackson2Utils {
+
+<span class="nc" id="L25">  private Jackson2Utils() {</span>
+<span class="nc" id="L26">  }</span>
+
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">  private static final Boolean JACKSON2_PRESENT = ClassUtils.isPresent( //</span>
+    &quot;com.fasterxml.jackson.databind.ObjectMapper&quot;, //
+<span class="fc" id="L30">    Thread.currentThread().getContextClassLoader() //</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">  ) &amp;&amp; ClassUtils.isPresent( //</span>
+    &quot;com.fasterxml.jackson.core.JsonGenerator&quot;, //
+<span class="fc" id="L33">    Thread.currentThread().getContextClassLoader() //</span>
+  );
+
+  public static class RuntimeJsonProcessingException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    public RuntimeJsonProcessingException(final String message, final Throwable cause) {
+<span class="nc" id="L41">      super(message, cause);</span>
+<span class="nc" id="L42">    }</span>
+  }
+
+  public static Boolean getJackson2Present() {
+<span class="nc" id="L46">    return Jackson2Utils.JACKSON2_PRESENT;</span>
+  }
+
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  static Set&lt;Jackson2Configurator&gt; scanJackson2Configurators() {
+<span class="fc" id="L51">    final String basePackage = Jackson2Utils.class.getName().split(&quot;\\.&quot;)[0];</span>
+<span class="fc" id="L52">    final Set&lt;Class&lt;Jackson2Configurator&gt;&gt; configurators = FileAndClasspathUtils.scan(basePackage,</span>
+      new FileAndClasspathUtils.AssignableFilter(Jackson2Configurator.class, false, true));
+
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">    if (configurators.isEmpty()) {</span>
+<span class="nc" id="L56">      log.warn(&quot;no {} found.&quot;, Jackson2Configurator.class.getSimpleName());</span>
+    }
+
+<span class="fc" id="L59">    return configurators.stream() //</span>
+<span class="fc" id="L60">      .flatMap(configurator -&gt; Arrays.stream(configurator.getEnumConstants())) //</span>
+<span class="fc" id="L61">      .collect(toSet());</span>
+  }
+
+  /**
+   * Setup a Mapper.
+   *
+   * @param propertyResolver propertyResolver
+   * @param objectMapper     to setup
+   * @param &lt;T&gt;              ObjectMapper or XmlMapper
+   * @return same instance of objectMapper param
+   */
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  public static &lt;T extends ObjectMapper&gt; T setupObjectMapper( //
+    final PropertyResolver propertyResolver, final T objectMapper) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">    for (final Jackson2Configurator instance : scanJackson2Configurators()) {</span>
+<span class="nc" id="L76">      log.info(&quot;config objectMapper: '{}' using: '{}'.&quot;, objectMapper, instance);</span>
+<span class="nc" id="L77">      instance.config(propertyResolver, objectMapper);</span>
+<span class="nc" id="L78">    }</span>
+<span class="nc" id="L79">    return objectMapper;</span>
+  }
+
+  public static &lt;T&gt; Function&lt;String, T&gt; fromJson( //
+    final ObjectMapper objectMapper, //
+    final TypeReference&lt;T&gt; typeReference //
+  ) {
+<span class="nc" id="L86">    return string -&gt; {</span>
+      try {
+<span class="nc" id="L88">        return objectMapper.readValue(string, typeReference);</span>
+<span class="nc" id="L89">      } catch (final IOException wrapped) {</span>
+<span class="nc" id="L90">        throw new RuntimeJsonProcessingException(&quot;error read from JSON.&quot;, wrapped);</span>
+      }
+    };
+  }
+
+  /**
+   * parse JSON.
+   *
+   * @param objectMapper objectMapper
+   * @param type         type
+   * @param &lt;T&gt;          type
+   * @return object
+   */
+  public static &lt;T&gt; Function&lt;String, T&gt; fromJson( //
+    final ObjectMapper objectMapper, //
+    final Class&lt;T&gt; type //
+  ) {
+<span class="nc" id="L107">    return string -&gt; {</span>
+      try {
+<span class="nc" id="L109">        return objectMapper.readValue(string, type);</span>
+<span class="nc" id="L110">      } catch (final IOException wrapped) {</span>
+<span class="nc" id="L111">        throw new RuntimeJsonProcessingException(&quot;error read from JSON.&quot;, wrapped);</span>
+      }
+    };
+  }
+
+  /**
+   * to JSON.
+   *
+   * @param objectMapper objectMapper
+   * @param &lt;T&gt;          type
+   * @return JSON
+   */
+  public static &lt;T&gt; Function&lt;T, String&gt; toJson(final ObjectMapper objectMapper) {
+<span class="nc" id="L124">    return object -&gt; {</span>
+      try {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (object != null) {</span>
+<span class="nc" id="L127">          return objectMapper.writeValueAsString(object);</span>
+        } else {
+<span class="nc" id="L129">          return &quot;&quot;;</span>
+        }
+<span class="nc" id="L131">      } catch (final JsonProcessingException wrapped) {</span>
+<span class="nc" id="L132">        throw new RuntimeJsonProcessingException(&quot;error serialize to JSON.&quot;, wrapped);</span>
+      }
+    };
+  }
+
+  public static &lt;T&gt; String toJson(final ObjectMapper objectMapper, final T item) {
+<span class="nc" id="L138">    return toJson(objectMapper).apply(item);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

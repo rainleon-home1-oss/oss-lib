@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rsa.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">Rsa.java</span></div><h1>Rsa.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.security.Provider;
+
+/**
+ * Created by zhanghaolun on 16/7/8.
+ */
+<span class="fc" id="L11">@Slf4j</span>
+public class Rsa implements EncodeCipher {
+
+<span class="fc" id="L14">  @Getter</span>
+  private final RsaEncryptor encryptor;
+<span class="fc" id="L16">  @Getter</span>
+  private final RsaDecryptor decryptor;
+
+<span class="fc" id="L19">  public Rsa(final RsaEncryptor encryptor, final RsaDecryptor decryptor) {</span>
+<span class="fc" id="L20">    this.encryptor = encryptor;</span>
+<span class="fc" id="L21">    this.decryptor = decryptor;</span>
+<span class="fc" id="L22">  }</span>
+
+  public Rsa(final Provider provider, final KeyExpression keyExpression) {
+<span class="fc" id="L25">    this( //</span>
+      new RsaEncryptor(provider, keyExpression), //
+      new RsaDecryptor(provider, keyExpression) //
+    );
+<span class="fc" id="L29">  }</span>
+
+  @Override
+  public String encrypt(final String plainText) {
+<span class="fc" id="L33">    return this.encryptor.encrypt(plainText);</span>
+  }
+
+  @Override
+  public String encrypt(final String plainText, final Integer maxAge) {
+<span class="nc" id="L38">    return this.encryptor.encrypt(plainText, maxAge);</span>
+  }
+
+  @Override
+  public String decrypt(final String encryptedAndEncoded) {
+<span class="fc" id="L43">    return this.decryptor.decrypt(encryptedAndEncoded);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
