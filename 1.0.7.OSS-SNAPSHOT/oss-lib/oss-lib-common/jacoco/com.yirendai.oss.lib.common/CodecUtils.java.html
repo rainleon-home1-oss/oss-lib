@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CodecUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">CodecUtils.java</span></div><h1>CodecUtils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static org.apache.commons.codec.CharEncoding.UTF_8;
+
+import lombok.SneakyThrows;
+
+import org.apache.commons.codec.net.URLCodec;
+
+/**
+ * Created by zhanghaolun on 16/11/16.
+ */
+public abstract class CodecUtils {
+
+<span class="nc" id="L14">  private CodecUtils() {</span>
+<span class="nc" id="L15">  }</span>
+
+  /**
+   * other ways to do this.
+   * &lt;pre&gt;
+   * {@code
+   * new org.apache.commons.codec.binary.Base64().encode,encodeToString
+   * io.jsonwebtoken.impl.TextCodec.BASE64.encode
+   * com.fasterxml.jackson.core.Base64Variants.MIME_NO_LINEFEEDS.encode()
+   * new String(org.apache.commons.codec.binary.Base64.encodeBase64(raw, UTF_8)
+   * }
+   * &lt;/pre&gt;
+   *
+   * @param raw raw bytes
+   * @return base64 string
+   */
+  public static String encodeBase64(final byte[] raw) {
+<span class="fc" id="L32">    return java.util.Base64.getEncoder().encodeToString(raw);</span>
+  }
+
+  /**
+   * other ways to do this.
+   * &lt;pre&gt;
+   * {@code
+   * org.springframework.security.crypto.codec.Base64.decode(base64String.getBytes(UTF_8.name()));
+   * new sun.misc.BASE64Decoder().decodeBuffer(base64String);
+   * org.apache.commons.codec.binary.Base64.decodeBase64(base64String);
+   * }
+   * &lt;/pre&gt;
+   *
+   * @param base64String base64 string
+   * @return raw bytes
+   */
+<span class="nc" id="L48">  @SneakyThrows</span>
+  public static byte[] decodeBase64(final String base64String) {
+<span class="fc" id="L50">    return java.util.Base64.getDecoder().decode(base64String);</span>
+  }
+
+<span class="fc" id="L53">  private static final URLCodec URL_CODEC = new URLCodec(UTF_8);</span>
+
+  /**
+   * other ways to do this.
+   * &lt;pre&gt;
+   * {@code
+   * java.net.URLEncoder.encode(text, UTF_8.name())
+   * }
+   * &lt;/pre&gt;
+   *
+   * @param text text to encode
+   * @return encoded text
+   */
+<span class="nc" id="L66">  @SneakyThrows</span>
+  public static String urlEncode(final String text) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">    return text != null ? URL_CODEC.encode(text) : null;</span>
+  }
+
+<span class="nc" id="L71">  @SneakyThrows</span>
+  public static String urlDecode(final String text) {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">    return text != null ? URL_CODEC.decode(text) : null;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

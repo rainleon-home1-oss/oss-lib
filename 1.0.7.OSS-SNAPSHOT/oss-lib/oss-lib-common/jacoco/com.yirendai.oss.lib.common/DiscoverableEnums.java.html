@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DiscoverableEnums.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">DiscoverableEnums.java</span></div><h1>DiscoverableEnums.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static com.google.common.collect.Maps.newLinkedHashMap;
+import static java.util.Collections.unmodifiableMap;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.type.filter.TypeFilter;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+<span class="nc" id="L22">@Slf4j</span>
+public final class DiscoverableEnums&lt;T extends Enum&lt;T&gt; &amp; DiscoverableEnum&lt;T&gt;&gt; {
+
+  private final Map&lt;Class&lt;?&gt;, Map&lt;String, T&gt;&gt; type2TextConstantMap;
+  private final Map&lt;String, T&gt; allTextConstantMap;
+
+<span class="nc" id="L28">  private DiscoverableEnums(final String basePackage, final Class&lt;T&gt; type) {</span>
+<span class="nc" id="L29">    final Set&lt;Class&lt;T&gt;&gt; discoverableEnums = scanDiscoverableEnums(basePackage, type);</span>
+<span class="nc" id="L30">    final Map&lt;Class&lt;?&gt;, Map&lt;String, T&gt;&gt; typeToText2ConstantMap = newLinkedHashMap();</span>
+<span class="nc" id="L31">    final Map&lt;String, T&gt; text2ConstantAllInOneMap = newLinkedHashMap();</span>
+<span class="nc" id="L32">    final Map&lt;String, Collection&lt;String&gt;&gt; discoverableEnumTexts = newLinkedHashMap();</span>
+<span class="nc" id="L33">    discoverableEnums.forEach(discoverableEnum -&gt; {</span>
+<span class="nc" id="L34">      final Map&lt;String, T&gt; text2ConstantMap = text2ConstantMap(discoverableEnum);</span>
+<span class="nc" id="L35">      typeToText2ConstantMap.put(discoverableEnum, text2ConstantMap);</span>
+<span class="nc" id="L36">      text2ConstantMap.entrySet().forEach(entry -&gt; {</span>
+<span class="nc" id="L37">        final String text = entry.getKey();</span>
+<span class="nc" id="L38">        final T constant = entry.getValue();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (text2ConstantAllInOneMap.containsKey(text)) {</span>
+<span class="nc" id="L40">          throw new IllegalArgumentException(&quot;'&quot; + text + &quot;' of '&quot; + constant + &quot;' conflict with '&quot;</span>
+<span class="nc" id="L41">            + text + &quot;' of '&quot; + text2ConstantAllInOneMap.get(text).getDeclaringClass() + &quot;'&quot;);</span>
+        }
+<span class="nc" id="L43">        text2ConstantAllInOneMap.put(text, constant);</span>
+<span class="nc" id="L44">      });</span>
+<span class="nc" id="L45">      discoverableEnumTexts.put(StringUtils.lowerCaseFirstChar(discoverableEnum.getSimpleName()),</span>
+<span class="nc" id="L46">        ImmutableList.copyOf(enumTexts(discoverableEnum)));</span>
+<span class="nc" id="L47">    });</span>
+
+<span class="nc" id="L49">    this.type2TextConstantMap = ImmutableMap.copyOf(typeToText2ConstantMap);</span>
+<span class="nc" id="L50">    this.allTextConstantMap = ImmutableMap.copyOf(text2ConstantAllInOneMap);</span>
+<span class="nc" id="L51">  }</span>
+
+  /**
+   * for validator.
+   *
+   * @param type type
+   * @param text text
+   * @return contains
+   */
+  public boolean contains(final Class&lt;?&gt; type, final String text) {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">    return this.type2TextConstantMap.get(type).get(text) != null; // may null pointer</span>
+  }
+
+  /**
+   * for String2DiscoverableEnumConverter.
+   *
+   * @param source text or name
+   * @return enum instance
+   */
+  public T convert(final Object source) {
+    final T result;
+<span class="nc bnc" id="L72" title="All 2 branches missed.">    if (source != null) {</span>
+<span class="nc" id="L73">      result = this.allTextConstantMap.get(source.toString());</span>
+    } else {
+<span class="nc" id="L75">      result = null;</span>
+    }
+<span class="nc" id="L77">    return result;</span>
+  }
+
+  /**
+   * for String2DiscoverableEnumConverter.
+   *
+   * @param source     text or name
+   * @param targetType targetType
+   * @return enum instance
+   */
+  @SuppressWarnings(&quot;unchecked&quot;)
+  public Object convert(final Object source, final TypeDescriptor targetType) {
+    final Object result;
+<span class="nc bnc" id="L90" title="All 2 branches missed.">    if (source != null) {</span>
+<span class="nc" id="L91">      result = this.parse((Class&lt;T&gt;) targetType.getType(), source.toString());</span>
+    } else {
+<span class="nc" id="L93">      result = null;</span>
+    }
+<span class="nc" id="L95">    return result;</span>
+  }
+
+  /**
+   * parse enum.
+   *
+   * @param targetType targetType
+   * @param source     text or name
+   * @return enum instance
+   */
+  public Optional&lt;T&gt; parse(final Class&lt;T&gt; targetType, final String source) {
+<span class="nc" id="L106">    final String textOrName = source.trim().toUpperCase();</span>
+<span class="nc" id="L107">    final Optional&lt;T&gt; result = this.parseByText(targetType, textOrName);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">    return result.isPresent() ? result : this.parseByName(targetType, textOrName);</span>
+  }
+
+  Optional&lt;T&gt; parseByText(final Class&lt;T&gt; targetType, final String text) {
+<span class="nc" id="L112">    return Optional.ofNullable(this.type2TextConstantMap.get(targetType).get(text)); // may be null</span>
+  }
+
+  Optional&lt;T&gt; parseByName(final Class&lt;T&gt; targetType, final String name) {
+<span class="nc" id="L116">    T result = null;</span>
+    try {
+<span class="nc" id="L118">      final T found = Enum.valueOf(targetType, name);</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">      if (isNotBlank(found.getText())) {</span>
+<span class="nc" id="L120">        result = found;</span>
+      }
+<span class="nc" id="L122">    } catch (final RuntimeException ignored) {</span>
+      // no-op
+<span class="nc" id="L124">      log.info(&quot;error parseByName '{}' of type '{}'.&quot;, name, targetType, ignored);</span>
+<span class="nc" id="L125">    }</span>
+<span class="nc" id="L126">    return Optional.ofNullable(result);</span>
+  }
+
+  static &lt;T extends Enum&lt;T&gt; &amp; DiscoverableEnum&lt;?&gt;&gt; Map&lt;String, T&gt; text2ConstantMap(
+    final Class&lt;T&gt; type) {
+<span class="nc" id="L131">    final Map&lt;String, T&gt; map = newLinkedHashMap();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">    for (final T constant : type.getEnumConstants()) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">      if (isNotBlank(constant.getText())) {</span>
+<span class="nc" id="L134">        map.put(constant.getText(), constant);</span>
+      }
+    }
+<span class="nc" id="L137">    return unmodifiableMap(map);</span>
+  }
+
+  static &lt;T extends Enum&lt;T&gt; &amp; DiscoverableEnum&lt;T&gt;&gt; Collection&lt;String&gt; enumTexts(
+    final Class&lt;T&gt; type) {
+    // Lambda error: Invalid receiver type class java.lang.Enum; not a subtype of implementation
+    // type interface DiscoverableEnum
+<span class="nc" id="L144">    final Set&lt;String&gt; result = Sets.newLinkedHashSet();</span>
+    // Note: must use for loop here!
+    // lambda will trigger an 'Invalid receiver type class java.lang.Enum,
+    // not a subtype of implementation type interface XXX' error;
+    // see: https://github.com/orfjackal/retrolambda/issues/69
+<span class="nc bnc" id="L149" title="All 2 branches missed.">    for (final T tag : Arrays.asList(type.getEnumConstants())) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">      if (isNotBlank(tag.getText())) {</span>
+<span class="nc" id="L151">        result.add(tag.getText());</span>
+      }
+<span class="nc" id="L153">    }</span>
+<span class="nc" id="L154">    return result;</span>
+  }
+
+  static &lt;T extends Enum&lt;T&gt; &amp; DiscoverableEnum&lt;T&gt;&gt; Set&lt;Class&lt;T&gt;&gt; scanDiscoverableEnums( //
+    final String basePackage, final Class&lt;T&gt; type) {
+    // InterfaceFilter(type, false) not working here.
+<span class="nc" id="L160">    final TypeFilter includeFilter = new FileAndClasspathUtils.AssignableFilter(type, false, false);</span>
+<span class="nc" id="L161">    return FileAndClasspathUtils.scan(basePackage, includeFilter);</span>
+  }
+
+  /**
+   * scan.
+   *
+   * @param basePackage base package
+   * @param type        type to find
+   * @param &lt;T&gt;         enum type
+   * @return found
+   */
+  @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
+  public static &lt;T extends Enum&lt;T&gt; &amp; DiscoverableEnum&lt;T&gt;&gt; DiscoverableEnums&lt;T&gt; discoverableEnums( //
+    final String basePackage, final Class&lt;?&gt; type //
+  ) {
+<span class="nc" id="L176">    return new DiscoverableEnums(basePackage, type);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AesEncryptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">AesEncryptor.java</span></div><h1>AesEncryptor.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.AES_CBC_NOPADDING;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.crypto.Cipher.ENCRYPT_MODE;
+
+import com.yirendai.oss.lib.common.CodecUtils;
+import com.yirendai.oss.lib.common.crypto.RandomString.RandomStrings;
+
+import lombok.Getter;
+import lombok.SneakyThrows;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.security.Provider;
+
+import javax.crypto.Cipher;
+
+/**
+ * Created by zhanghaolun on 16/11/17.
+ */
+public class AesEncryptor implements EncodeEncryptor {
+
+<span class="fc" id="L24">  @Getter</span>
+  private final Charset charset;
+  private final Provider provider;
+  private final AesCbcKey key;
+
+<span class="fc" id="L29">  public AesEncryptor(final Provider provider, final KeyExpression keyExpression) {</span>
+<span class="fc" id="L30">    this.charset = UTF_8;</span>
+<span class="fc" id="L31">    this.provider = provider;</span>
+<span class="fc" id="L32">    this.key = new AesCbcKey(keyExpression);</span>
+<span class="fc" id="L33">  }</span>
+
+  @Override
+  public String encrypt(final String plainText) {
+<span class="nc" id="L37">    return this.encryptBytes( //</span>
+<span class="nc" id="L38">      RandomStrings.RANDOM_BASE62.generate(this.key.getCbcIvLength()), //</span>
+<span class="nc" id="L39">      plainText.getBytes(this.charset) //</span>
+    );
+  }
+
+  @Override
+  public String encrypt(final String plainText, final Integer maxAge) {
+<span class="nc" id="L45">    throw new UnsupportedOperationException();</span>
+  }
+
+  public String encryptBytes(final String random, final byte[] plainBytes) {
+<span class="fc" id="L49">    final byte[] randomBytes = random.getBytes(this.charset);</span>
+<span class="fc" id="L50">    final int nopadLength = randomBytes.length + plainBytes.length;</span>
+    // ... + pad: 使用自定义的填充方式对明文进行补位填充
+<span class="fc" id="L52">    final byte[] padBytes = Pkcs7Encoder.PKCS7_UTF8_BLOCK32.encode(nopadLength);</span>
+
+    // 获得最终的字节流, 未加密
+    // random + plain + pad
+<span class="fc" id="L56">    final ByteBuffer unencrypted = ByteBuffer.allocate(nopadLength + padBytes.length);</span>
+<span class="fc" id="L57">    unencrypted.put(randomBytes);</span>
+<span class="fc" id="L58">    unencrypted.put(plainBytes);</span>
+<span class="fc" id="L59">    unencrypted.put(padBytes);</span>
+    try {
+      // 加密
+<span class="fc" id="L62">      final byte[] encrypted = this.encryptCipher().doFinal(unencrypted.array());</span>
+      // 使用BASE64对加密后的字符串进行编码
+<span class="fc" id="L64">      return CodecUtils.encodeBase64(encrypted);</span>
+<span class="nc" id="L65">    } catch (final Exception cause) {</span>
+<span class="nc" id="L66">      throw new AesException(AesException.AesError.ENCRYPT_AES_ERROR, cause);</span>
+    } finally {
+<span class="pc" id="L68">      unencrypted.clear();</span>
+    }
+  }
+
+<span class="nc" id="L72">  @SneakyThrows</span>
+  Cipher encryptCipher() { // arg1: &quot;BC&quot; 指定使用 bouncycastle provider, 不指定则使用jre
+<span class="fc" id="L74">    final Cipher cipher = Cipher.getInstance(AES_CBC_NOPADDING, this.provider);// 设置加密模式为AES的CBC模式</span>
+<span class="fc" id="L75">    cipher.init(ENCRYPT_MODE, this.key.getKeySpec(), this.key.getCbcIv());</span>
+<span class="fc" id="L76">    return cipher;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

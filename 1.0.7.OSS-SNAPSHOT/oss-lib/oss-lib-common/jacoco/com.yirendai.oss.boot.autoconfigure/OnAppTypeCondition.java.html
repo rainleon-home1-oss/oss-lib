@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OnAppTypeCondition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.boot.autoconfigure</a> &gt; <span class="el_source">OnAppTypeCondition.java</span></div><h1>OnAppTypeCondition.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.boot.autoconfigure;
+
+import static com.yirendai.oss.boot.autoconfigure.AppProperties.DEFAULT_APP_TYPE;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
+import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.MultiValueMap;
+
+<span class="nc" id="L15">@Slf4j</span>
+<span class="nc" id="L16">public class OnAppTypeCondition extends SpringBootCondition {</span>
+
+  public static Boolean matches(final AppType appType, final AppType... appTypes) {
+<span class="nc" id="L19">    return ArrayUtils.contains(appTypes, appType);</span>
+  }
+
+  @Override
+  public ConditionOutcome getMatchOutcome( //
+    final ConditionContext context, //
+    final AnnotatedTypeMetadata metadata //
+  ) {
+<span class="nc" id="L27">    final MultiValueMap&lt;String, Object&gt; attributes = metadata.getAllAnnotationAttributes( //</span>
+<span class="nc" id="L28">      ConditionalOnAppType.class.getName(), true //</span>
+    );
+<span class="nc" id="L30">    final AppType[] value = (AppType[]) attributes.get(&quot;value&quot;).get(0);</span>
+
+<span class="nc" id="L32">    final Environment environment = context.getEnvironment();</span>
+<span class="nc" id="L33">    final String key = &quot;app.type&quot;;</span>
+<span class="nc" id="L34">    final AppType appType = AppType.valueOf(environment.getProperty(key, DEFAULT_APP_TYPE.name()).toUpperCase());</span>
+<span class="nc" id="L35">    final Boolean matches = OnAppTypeCondition.matches(appType, value);</span>
+
+    final ConditionOutcome outcome;
+<span class="nc bnc" id="L38" title="All 2 branches missed.">    if (matches) {</span>
+<span class="nc" id="L39">      outcome = ConditionOutcome.match();</span>
+    } else {
+<span class="nc" id="L41">      outcome = ConditionOutcome.noMatch( //</span>
+<span class="nc" id="L42">        key + &quot; not match. current: &quot; + appType + &quot;, condition: &quot; + ArrayUtils.toString(value) //</span>
+      );
+    }
+<span class="nc" id="L45">    return outcome;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

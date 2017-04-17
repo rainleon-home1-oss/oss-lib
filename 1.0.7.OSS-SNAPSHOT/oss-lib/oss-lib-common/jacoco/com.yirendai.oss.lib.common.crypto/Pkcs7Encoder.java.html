@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pkcs7Encoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">Pkcs7Encoder.java</span></div><h1>Pkcs7Encoder.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
+/**
+ * 提供基于PKCS7算法的加解密接口.
+ */
+<span class="pc" id="L11">public enum Pkcs7Encoder {</span>
+
+<span class="fc" id="L13">  PKCS7_UTF8_BLOCK32(UTF_8, 32);</span>
+
+  private final Charset charset;
+  private final int blockSize;
+
+<span class="fc" id="L18">  Pkcs7Encoder(final Charset charset, final int blockSize) {</span>
+<span class="fc" id="L19">    this.charset = charset;</span>
+<span class="fc" id="L20">    this.blockSize = blockSize;</span>
+<span class="fc" id="L21">  }</span>
+
+  /**
+   * 将数字转化成ASCII码对应的字符，用于对明文进行补码.
+   *
+   * @param value 需要转化的数字
+   * @return 转化得到的字符
+   */
+  private static char chr(final int value) {
+<span class="fc" id="L30">    return (char) (byte) (value &amp; 0xFF);</span>
+  }
+
+  /**
+   * 获得对明文进行补位填充的字节.
+   *
+   * @param count 需要进行填充补位操作的明文字节个数
+   * @return 补齐用的字节数组
+   */
+  public byte[] encode(final int count) {
+    // 计算需要填充的位数
+<span class="fc" id="L41">    final int toPad = this.blockSize - (count % this.blockSize);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">    final int amountToPad = toPad == 0 ? this.blockSize : toPad;</span>
+    // 获得补位所用的字符
+<span class="fc" id="L44">    final char padChr = Pkcs7Encoder.chr(amountToPad);</span>
+<span class="fc" id="L45">    final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">    for (int index = 0; index &lt; amountToPad; index++) {</span>
+<span class="fc" id="L47">      sb.append(padChr);</span>
+    }
+<span class="fc" id="L49">    return sb.toString().getBytes(this.charset);</span>
+  }
+
+  /**
+   * 删除解密后明文的补位字符.
+   *
+   * @param decrypted 解密后的明文
+   * @return 删除补位字符后的明文
+   */
+  public byte[] decode(final byte[] decrypted) {
+<span class="fc" id="L59">    final int pad = (int) decrypted[decrypted.length - 1];</span>
+<span class="pc bpc" id="L60" title="2 of 4 branches missed.">    final int padAmount = pad &lt; 1 || pad &gt; this.blockSize ? 0 : pad;</span>
+<span class="fc" id="L61">    return Arrays.copyOfRange(decrypted, 0, decrypted.length - padAmount);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

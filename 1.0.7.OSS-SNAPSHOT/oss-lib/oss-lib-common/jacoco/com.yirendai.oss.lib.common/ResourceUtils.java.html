@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common</a> &gt; <span class="el_source">ResourceUtils.java</span></div><h1>ResourceUtils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import lombok.SneakyThrows;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+
+/**
+ * Created by zhanghaolun on 16/7/9.
+ */
+public final class ResourceUtils {
+
+<span class="nc" id="L15">  private ResourceUtils() {</span>
+<span class="nc" id="L16">  }</span>
+
+<span class="nc" id="L18">  @SneakyThrows</span>
+  public static String classPathString(final String file) {
+<span class="fc" id="L20">    return IOUtils.toString(classPathBytes(file), UTF_8.name());</span>
+  }
+
+<span class="nc" id="L23">  @SneakyThrows</span>
+  public static byte[] classPathBytes(final String file) {
+<span class="fc" id="L25">    return IOUtils.toByteArray(</span>
+<span class="fc" id="L26">      new ClassPathResource(file, Thread.currentThread().getContextClassLoader()).getInputStream());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

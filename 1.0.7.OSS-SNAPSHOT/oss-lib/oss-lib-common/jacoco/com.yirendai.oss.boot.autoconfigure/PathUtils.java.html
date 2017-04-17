@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PathUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.boot.autoconfigure</a> &gt; <span class="el_source">PathUtils.java</span></div><h1>PathUtils.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.boot.autoconfigure;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import org.springframework.util.AntPathMatcher;
+
+import java.util.function.Predicate;
+
+/**
+ * Created by zhanghaolun on 16/11/3.
+ */
+public abstract class PathUtils {
+
+<span class="nc" id="L14">  private PathUtils() {</span>
+<span class="nc" id="L15">  }</span>
+
+  /**
+   * Any path satisfies this condition.
+   *
+   * @return predicate that is always true
+   */
+  public static Predicate&lt;String&gt; any() {
+<span class="nc" id="L23">    return t -&gt; true;</span>
+  }
+
+  /**
+   * No path satisfies this condition.
+   *
+   * @return predicate that is always false
+   */
+  public static Predicate&lt;String&gt; none() {
+<span class="nc" id="L32">    return t -&gt; false;</span>
+  }
+
+  /**
+   * Predicate that evaluates the supplied regular expression.
+   *
+   * @param pathRegex - regex
+   * @return predicate that matches a particular regex
+   */
+  public static Predicate&lt;String&gt; regex(final String pathRegex) {
+<span class="fc" id="L42">    return input -&gt; input.matches(pathRegex);</span>
+  }
+
+  /**
+   * Predicate that evaluates the supplied ant pattern.
+   *
+   * @param antPattern - ant Pattern
+   * @return predicate that matches a particular ant pattern
+   */
+  public static Predicate&lt;String&gt; ant(final String antPattern) {
+<span class="fc" id="L52">    return input -&gt; {</span>
+<span class="fc" id="L53">      AntPathMatcher matcher = new AntPathMatcher();</span>
+<span class="fc" id="L54">      return matcher.match(antPattern, input);</span>
+    };
+  }
+
+  public static Predicate&lt;String&gt; managementPaths(final String managementContextPath) {
+    final Predicate&lt;String&gt; result;
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">    if (isNotBlank(managementContextPath)) {</span>
+<span class="fc" id="L61">      result = regex(managementContextPath + &quot;/.*&quot;) //</span>
+<span class="fc" id="L62">        .or(ant(managementContextPath)) //</span>
+<span class="fc" id="L63">        .or(ant(managementContextPath + &quot;&quot; + &quot;.json&quot;)) //</span>
+<span class="fc" id="L64">        .or(regex(&quot;/env(\\..+|/.*)?&quot;)) // environment-manager-mvc-endpoint@org.springframework.cloud.context</span>
+<span class="fc" id="L65">        .or(regex(&quot;/restart(\\..+|/.*)?&quot;)) // restart-mvc-endpoint@org.springframework.cloud.context</span>
+      ;
+    } else {
+<span class="nc" id="L68">      result = regex(&quot;/archaius(\\..+|/.*)?&quot;) // endpoint-mvc-adapter</span>
+<span class="nc" id="L69">        .or(regex(&quot;/autoconfig(\\..+|/.*)?&quot;)) //</span>
+<span class="nc" id="L70">        .or(regex(&quot;/beans(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L71">        .or(regex(&quot;/configprops(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L72">        .or(regex(&quot;/dump(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L73">        .or(regex(&quot;/features(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L74">        .or(regex(&quot;/info(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L75">        .or(regex(&quot;/mappings(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L76">        .or(regex(&quot;/trace(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L77">        .or(regex(&quot;/env(\\..+|/.*)?&quot;)) // environment-mvc-endpoint,</span>
+        // environment-manager-mvc-endpoint@org.springframework.cloud.context
+<span class="nc" id="L79">        .or(regex(&quot;/pause(\\..+|/.*)?&quot;)) // generic-postable-mvc-endpoint</span>
+<span class="nc" id="L80">        .or(regex(&quot;/refresh(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L81">        .or(regex(&quot;/resume(\\..+|/.*)?&quot;))</span>
+<span class="nc" id="L82">        .or(regex(&quot;/actuator(\\..+|/.*)?&quot;)) // hal-json-mvc-endpoint</span>
+<span class="nc" id="L83">        .or(regex(&quot;/health(\\..+|/.*)?&quot;)) // health-mvc-endpoint</span>
+<span class="nc" id="L84">        .or(regex(&quot;/heapdump(\\..+|/.*)?&quot;)) // heapdump-mvc-endpoint</span>
+<span class="nc" id="L85">        .or(regex(&quot;/jolokia(\\..+|/.*)?&quot;)) // jolokia-mvc-endpoint</span>
+<span class="nc" id="L86">        .or(regex(&quot;/logfile(\\..+|/.*)?&quot;)) // log-file-mvc-endpoint</span>
+<span class="nc" id="L87">        .or(regex(&quot;/metrics(\\..+|/.*)?&quot;)) // metrics-mvc-endpoint</span>
+<span class="nc" id="L88">        .or(regex(&quot;/restart(\\..+|/.*)?&quot;)) // restart-mvc-endpoint@org.springframework.cloud.context</span>
+<span class="nc" id="L89">        .or(regex(&quot;/shutdown(\\..+|/.*)?&quot;)) // shutdown-mvc-endpoint@org.springframework.boot.actuate</span>
+      ;
+    }
+<span class="fc" id="L92">    return result;</span>
+  }
+
+  public static Boolean isManagementPath(final String managementContextPath, final String servletPath) {
+<span class="fc" id="L96">    return managementPaths(managementContextPath).test(servletPath);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

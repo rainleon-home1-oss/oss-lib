@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.boot.autoconfigure</a> &gt; <span class="el_source">AppProperties.java</span></div><h1>AppProperties.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.boot.autoconfigure;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Sets.newLinkedHashSet;
+import static com.yirendai.oss.boot.autoconfigure.AppType.MIXED;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import com.yirendai.oss.lib.common.crypto.KeyExpression;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.core.env.Environment;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+/**
+ * &lt;p&gt;
+ * Configuration properties for spring-boot applications. see:
+ * {@link org.springframework.boot.autoconfigure.web.ServerProperties}
+ * &lt;/p&gt;
+ * Created by zhanghaolun on 16/8/17.
+ */
+@ConfigurationProperties(prefix = &quot;app&quot;, ignoreUnknownFields = true)
+@SuppressWarnings({&quot;PMD.ImmutableField&quot;, &quot;PMD.SingularField&quot;, &quot;PMD.AvoidUsingHardCodedIP&quot;})
+@Getter
+public class AppProperties implements InitializingBean {
+
+<span class="fc" id="L41">  public static final Pattern PROFILE_PATTERN = Pattern.compile(&quot;[a-zA-Z0-9.]+&quot;);</span>
+  public static final String DOT_ENV = &quot;.env&quot;;
+  public static final String PRODUCTION = &quot;production&quot;;
+  public static final String PRODUCTION_ENV = PRODUCTION + DOT_ENV;
+  public static final String CI = &quot;ci&quot;;
+  public static final String CI_ENV = CI + DOT_ENV;
+  public static final String DEVELOPMENT = &quot;development&quot;;
+  public static final String DEVELOPMENT_ENV = DEVELOPMENT + DOT_ENV;
+
+<span class="fc" id="L50">  public static final AppType DEFAULT_APP_TYPE = MIXED;</span>
+
+<span class="nc" id="L52">  @Setter</span>
+  private AppType type;
+
+<span class="nc" id="L55">  @NestedConfigurationProperty</span>
+<span class="nc" id="L56">  @Setter</span>
+<span class="nc" id="L57">  private AppLogProperties log = new AppLogProperties();</span>
+
+  /**
+   * auto find out from spring.profiles.active
+   */
+  private String env;
+
+<span class="nc" id="L64">  @NestedConfigurationProperty</span>
+<span class="nc" id="L65">  @Setter</span>
+<span class="nc" id="L66">  private AppErrorProperties error = new AppErrorProperties();</span>
+
+<span class="nc" id="L68">  @NestedConfigurationProperty</span>
+<span class="nc" id="L69">  @Setter</span>
+  private AppSecurityProperties security = new AppSecurityProperties();
+
+<span class="nc" id="L72">  @Setter</span>
+<span class="nc" id="L73">  private KeyExpression adminPublicKey = new KeyExpression();</span>
+
+  //@Value(&quot;${random.int(999)}&quot;)
+  @Value(&quot;${random.value}&quot;)
+<span class="nc" id="L77">  private String random;</span>
+
+<span class="nc" id="L79">  public AppProperties() {</span>
+<span class="nc" id="L80">    this.type = DEFAULT_APP_TYPE;</span>
+<span class="nc" id="L81">  }</span>
+
+  static Optional&lt;String&gt; findEnv(final Environment environment) {
+<span class="fc" id="L84">    final Collection&lt;String&gt; activeProfiles = asList(environment.getActiveProfiles());</span>
+<span class="fc" id="L85">    final Collection&lt;String&gt; envProfiles = newLinkedHashSet(activeProfiles).stream() //</span>
+<span class="fc" id="L86">      .filter(profile -&gt; profile.endsWith(DOT_ENV)) //</span>
+<span class="fc" id="L87">      .map(profile -&gt; profile.substring(0, profile.length() - 4)).collect(toList());</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    checkArgument(envProfiles.size() &lt; 2, &quot;only 1 env is allowed, there are %s&quot;, envProfiles);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">    return Optional.ofNullable(!envProfiles.isEmpty() ? envProfiles.iterator().next() : null);</span>
+  }
+
+  public static String getEnvironment(final Environment environment) {
+<span class="nc" id="L93">    final Optional&lt;String&gt; envOptional = findEnv(environment);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    return envOptional.isPresent() ? envOptional.get() : DEVELOPMENT;</span>
+  }
+
+  public static Boolean getProdEnvironment(final String env) {
+<span class="nc" id="L98">    return PRODUCTION.equals(env);</span>
+  }
+
+  public Boolean getProdEnvironment() {
+<span class="nc" id="L102">    return getProdEnvironment(this.env);</span>
+  }
+
+  @Autowired
+  public void setEnvironment(final Environment environment) {
+<span class="nc" id="L107">    final boolean allMatch = Arrays.stream(environment.getActiveProfiles())</span>
+<span class="nc" id="L108">      .allMatch(activeProfile -&gt; PROFILE_PATTERN.matcher(activeProfile).matches());</span>
+<span class="nc" id="L109">    checkArgument(allMatch, &quot;profile name must match %s&quot;, PROFILE_PATTERN.pattern());</span>
+<span class="nc" id="L110">    this.env = getEnvironment(environment);</span>
+<span class="nc" id="L111">  }</span>
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+<span class="nc" id="L115">  }</span>
+
+  public AppType getType() {
+<span class="nc" id="L118">    return this.type;</span>
+  }
+
+  public String getEnv() {
+<span class="nc" id="L122">    return this.env;</span>
+  }
+
+  public AppSecurityProperties getSecurity() {
+<span class="nc" id="L126">    return this.security;</span>
+  }
+
+  public String getSecurityDefaultTestUser() {
+<span class="nc bnc" id="L130" title="All 4 branches missed.">    checkState(!this.getProdEnvironment() || isBlank(this.security.getDefaultTestUser()), //</span>
+      &quot;do not set app.security.defaultTestUser in env %s&quot;, PRODUCTION);
+<span class="nc" id="L132">    return this.security.getDefaultTestUser();</span>
+  }
+
+  public Boolean getSecurityEnabled() {
+<span class="nc" id="L136">    return this.security.getEnabled();</span>
+  }
+
+  public Boolean getSecurityUseTestUser() {
+<span class="nc" id="L140">    return isNotBlank(getSecurityDefaultTestUser());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

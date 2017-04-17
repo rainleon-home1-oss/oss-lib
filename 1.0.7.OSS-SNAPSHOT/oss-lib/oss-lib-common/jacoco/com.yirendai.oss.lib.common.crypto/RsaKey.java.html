@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RsaKey.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">RsaKey.java</span></div><h1>RsaKey.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.yirendai.oss.lib.common.StringUtils.dropComment;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.ALGO_RSA;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.COLON;
+import static com.yirendai.oss.lib.common.crypto.CryptoConstants.UNDERSCORE;
+import static java.lang.Integer.parseInt;
+
+import com.google.common.collect.ImmutableSet;
+
+import com.yirendai.oss.lib.common.CodecUtils;
+
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.codec.binary.Hex;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1Sequence;
+
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Collection;
+
+/**
+ * Created by zhanghaolun on 16/11/17.
+ */
+<span class="fc" id="L33">@Slf4j</span>
+public class RsaKey {
+
+  public static final char COMMENT_MARK = '-';
+  public static final String KEY_FORMAT_PKCS1 = &quot;PKCS1&quot;;
+  public static final String KEY_FORMAT_PKCS8 = &quot;PKCS8&quot;;
+  public static final String KEY_FORMAT_X509 = &quot;X509&quot;;
+  public static final String KEY_FORMAT_PKCS1_PKCS1 = KEY_FORMAT_PKCS1 + &quot;_&quot; + KEY_FORMAT_PKCS1;
+  public static final String KEY_FORMAT_PKCS1_X509 = KEY_FORMAT_PKCS1 + &quot;_&quot; + KEY_FORMAT_X509;
+  public static final String KEY_FORMAT_PKCS8_X509 = KEY_FORMAT_PKCS8 + &quot;_&quot; + KEY_FORMAT_X509;
+
+  public static final String KEY_TYPE_PAIR = &quot;PAIR&quot;;
+  public static final String KEY_TYPE_PRIVATE = &quot;PRIV&quot;;
+  public static final String KEY_TYPE_PUBLIC = &quot;PUB&quot;;
+
+<span class="fc" id="L48">  static final Collection&lt;String&gt; SUPPORTED_PAIR_FORMATS = ImmutableSet.of( //</span>
+    KEY_FORMAT_PKCS1_PKCS1, //
+    KEY_FORMAT_PKCS1_X509, //
+    KEY_FORMAT_PKCS8_X509 //
+  );
+
+<span class="fc" id="L54">  @Getter</span>
+  private final KeyExpression keyExpression;
+<span class="fc" id="L56">  @Getter</span>
+  private final RSAPublicKey rsaPublicKey;
+<span class="fc" id="L58">  @Getter</span>
+  private final RSAPrivateKey rsaPrivateKey;
+<span class="nc" id="L60">  @Getter</span>
+  private final String keyFormat;
+<span class="nc" id="L62">  @Getter</span>
+  private final int keySize;
+<span class="nc" id="L64">  @Getter</span>
+  private final String keyType;
+<span class="nc" id="L66">  @Getter</span>
+  private final String privateKeyFormat;
+<span class="nc" id="L68">  @Getter</span>
+  private final String publicKeyFormat;
+
+<span class="fc" id="L71">  public RsaKey(final KeyExpression keyExpression) {</span>
+<span class="fc" id="L72">    this.keyExpression = keyExpression;</span>
+
+<span class="fc" id="L74">    final String spec = keyExpression.getSpec();</span>
+<span class="fc" id="L75">    final String value = keyExpression.getValue();</span>
+
+<span class="fc" id="L77">    this.keyFormat = RsaKey.keyFormat(spec);</span>
+<span class="fc" id="L78">    this.keySize = RsaKey.keySize(spec);</span>
+<span class="fc" id="L79">    this.keyType = RsaKey.keyType(spec);</span>
+
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">    if (KEY_TYPE_PAIR.equals(this.keyType)) {</span>
+<span class="fc" id="L82">      checkArgument(SUPPORTED_PAIR_FORMATS.contains(this.keyFormat), &quot;unsupported keyFormat &quot; + this.keyFormat);</span>
+<span class="fc" id="L83">      this.privateKeyFormat = this.keyFormat.split(UNDERSCORE)[0];</span>
+<span class="fc" id="L84">      this.publicKeyFormat = this.keyFormat.split(UNDERSCORE)[1];</span>
+<span class="fc" id="L85">      this.rsaPrivateKey = RsaKey.privateKey(RsaKey.extractPrivateKey(this.keyExpression), this.privateKeyFormat);</span>
+<span class="fc" id="L86">      this.rsaPublicKey = RsaKey.publicKey(RsaKey.extractPublicKey(this.keyExpression), this.publicKeyFormat);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">    } else if (KEY_TYPE_PRIVATE.equals(this.keyType)) {</span>
+<span class="nc" id="L88">      this.privateKeyFormat = this.keyFormat;</span>
+<span class="nc" id="L89">      this.publicKeyFormat = null;</span>
+<span class="nc" id="L90">      this.rsaPrivateKey = RsaKey.privateKey(value, this.keyFormat);</span>
+<span class="nc" id="L91">      this.rsaPublicKey = null;</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    } else if (KEY_TYPE_PUBLIC.equals(this.keyType)) {</span>
+<span class="nc" id="L93">      this.privateKeyFormat = null;</span>
+<span class="nc" id="L94">      this.publicKeyFormat = this.keyFormat;</span>
+<span class="nc" id="L95">      this.rsaPrivateKey = null;</span>
+<span class="nc" id="L96">      this.rsaPublicKey = RsaKey.publicKey(value, this.keyFormat);</span>
+    } else {
+<span class="nc" id="L98">      throw new IllegalArgumentException(&quot;unsupported keyType &quot; + this.keyType);</span>
+    }
+<span class="fc" id="L100">  }</span>
+
+  public RsaKey(final String keyExpression) {
+<span class="nc" id="L103">    this(new KeyExpression(keyExpression));</span>
+<span class="nc" id="L104">  }</span>
+
+  public String getEncodedRsaPrivateKey() {
+<span class="fc" id="L107">    return CodecUtils.encodeBase64(this.getRsaPrivateKey().getEncoded());</span>
+  }
+
+  public String getEncodedRsaPublicKey() {
+<span class="fc" id="L111">    return CodecUtils.encodeBase64(this.getRsaPublicKey().getEncoded());</span>
+  }
+
+  public KeyExpression getPrivateKey() {
+    final KeyExpression result;
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">    if (KEY_TYPE_PAIR.equals(this.keyType)) {</span>
+<span class="fc" id="L117">      final String spec = RsaKey.keySpec(this.privateKeyFormat, this.keySize, KEY_TYPE_PRIVATE);</span>
+<span class="fc" id="L118">      final String value = RsaKey.extractPrivateKey(this.keyExpression);</span>
+<span class="fc" id="L119">      result = new KeyExpression(spec, value);</span>
+<span class="pc bnc" id="L120" title="All 2 branches missed.">    } else if (KEY_TYPE_PRIVATE.equals(this.keyType)) {</span>
+<span class="nc" id="L121">      result = this.keyExpression;</span>
+    } else {
+<span class="nc" id="L123">      throw new UnsupportedOperationException(&quot;no privateKey present&quot;);</span>
+    }
+<span class="fc" id="L125">    return result;</span>
+  }
+
+  public KeyExpression getPublicKey() {
+    final KeyExpression result;
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    if (KEY_TYPE_PAIR.equals(this.keyType)) {</span>
+<span class="fc" id="L131">      final String spec = RsaKey.keySpec(this.publicKeyFormat, this.keySize, KEY_TYPE_PUBLIC);</span>
+<span class="fc" id="L132">      final String value = RsaKey.extractPublicKey(this.keyExpression);</span>
+<span class="fc" id="L133">      result = new KeyExpression(spec, value);</span>
+<span class="pc bnc" id="L134" title="All 2 branches missed.">    } else if (KEY_TYPE_PUBLIC.equals(this.keyType)) {</span>
+<span class="nc" id="L135">      result = this.keyExpression;</span>
+    } else {
+<span class="nc" id="L137">      throw new UnsupportedOperationException(&quot;no publicKey present&quot;);</span>
+    }
+<span class="fc" id="L139">    return result;</span>
+  }
+
+  public KeyExpression getKey(final String spec) {
+<span class="nc" id="L143">    final String keyFormat = RsaKey.keyFormat(spec);</span>
+<span class="nc" id="L144">    final int keySize = RsaKey.keySize(spec);</span>
+<span class="nc" id="L145">    final String keyType = RsaKey.keyType(spec);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">    checkArgument(this.keySize == keySize, &quot;keySize not match &quot; + this.keySize);</span>
+
+    final KeyExpression result;
+<span class="nc bnc" id="L149" title="All 2 branches missed.">    if (KEY_TYPE_PAIR.equals(keyType)) {</span>
+<span class="nc" id="L150">      checkArgument(KEY_TYPE_PAIR.equals(this.keyType), &quot;no keyPair present&quot;);</span>
+<span class="nc" id="L151">      checkArgument(keyFormat.equals(this.keyFormat), &quot;keyFormat not match &quot; + this.keyFormat);</span>
+<span class="nc" id="L152">      result = new KeyExpression(spec, this.keyExpression.getValue());</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">    } else if (KEY_TYPE_PRIVATE.equals(keyType)) {</span>
+<span class="nc" id="L154">      checkArgument(keyFormat.equals(this.privateKeyFormat), &quot;keyFormat not match &quot; + this.privateKeyFormat);</span>
+<span class="nc" id="L155">      result = this.getPrivateKey();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">    } else if (KEY_TYPE_PUBLIC.equals(keyType)) {</span>
+<span class="nc" id="L157">      checkArgument(keyFormat.equals(this.publicKeyFormat), &quot;keyFormat not match &quot; + this.publicKeyFormat);</span>
+<span class="nc" id="L158">      result = this.getPublicKey();</span>
+    } else {
+<span class="nc" id="L160">      throw new IllegalArgumentException(&quot;unsupported keyType &quot; + keyType);</span>
+    }
+<span class="nc" id="L162">    return result;</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L167">    return this.keyExpression.toString();</span>
+  }
+
+  public static String extractPrivateKey(final KeyExpression keyExpression) {
+<span class="fc" id="L171">    return keyExpression.getValue().substring(0, keyExpression.getValue().indexOf(COLON));</span>
+  }
+
+  public static String extractPublicKey(final KeyExpression keyExpression) {
+<span class="fc" id="L175">    return keyExpression.getValue().substring(keyExpression.getValue().indexOf(COLON) + 1);</span>
+  }
+
+  public static String keyFormat(final String spec) {
+<span class="fc" id="L179">    final int index = spec.indexOf(UNDERSCORE, spec.indexOf(UNDERSCORE) + 1) + 1;</span>
+<span class="fc" id="L180">    return spec.substring(index);</span>
+  }
+
+  public static int keySize(final String spec) {
+<span class="fc" id="L184">    final String text = spec.split(UNDERSCORE)[0].substring(3);</span>
+<span class="fc" id="L185">    return parseInt(text);</span>
+  }
+
+  public static String keySpec(final String keyFormat, final int keySize, final String keyType) {
+<span class="fc" id="L189">    return ALGO_RSA + keySize + UNDERSCORE + keyType.toUpperCase() + UNDERSCORE + keyFormat.toUpperCase();</span>
+  }
+
+  public static String keyType(final String spec) {
+<span class="fc" id="L193">    return spec.split(UNDERSCORE)[1];</span>
+  }
+
+  public static RSAPrivateKey privateKey(final String key, final String keyFormat) {
+    final RSAPrivateKey result;
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">    if (KEY_FORMAT_PKCS1.equals(keyFormat)) {</span>
+<span class="fc" id="L199">      result = RsaKey.privateKeyPkcs1(key);</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">    } else if (KEY_FORMAT_PKCS8.equals(keyFormat)) {</span>
+<span class="nc" id="L201">      result = RsaKey.privateKeyPkcs8(key);</span>
+    } else {
+<span class="nc" id="L203">      throw new IllegalArgumentException(&quot;unsupported keyFormat &quot; + keyFormat);</span>
+    }
+<span class="fc" id="L205">    return result;</span>
+  }
+
+  public static RSAPublicKey publicKey(final String key, final String keyFormat) {
+<span class="fc" id="L209">    checkArgument(KEY_FORMAT_X509.equals(keyFormat), &quot;unsupported keyFormat &quot; + keyFormat);</span>
+<span class="fc" id="L210">    return RsaKey.publicKeyX509(key);</span>
+  }
+
+<span class="nc" id="L213">  @SneakyThrows</span>
+  public static RSAPrivateKey privateKeyPkcs1(final String pkcs1) {
+<span class="fc" id="L215">    final String withoutComment = dropComment(pkcs1, COMMENT_MARK);</span>
+<span class="fc" id="L216">    final byte[] raw = CodecUtils.decodeBase64(withoutComment);</span>
+
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">    if (log.isDebugEnabled()) {</span>
+<span class="nc" id="L219">      log.debug(&quot;withoutComment: {}&quot;, withoutComment);</span>
+<span class="nc" id="L220">      log.debug(&quot;raw: {}&quot;, Hex.encodeHexString(raw));</span>
+    }
+
+<span class="fc" id="L223">    final ASN1Primitive asn1Primitive = ASN1Sequence.fromByteArray(raw);</span>
+    // final RSAPrivateKeyStructure asn1 = new RSAPrivateKeyStructure((ASN1Sequence) asn1Primitive);
+<span class="fc" id="L225">    final org.bouncycastle.asn1.pkcs.RSAPrivateKey asn1 =</span>
+<span class="fc" id="L226">      org.bouncycastle.asn1.pkcs.RSAPrivateKey.getInstance(asn1Primitive);</span>
+<span class="fc" id="L227">    final RSAPrivateKeySpec rsaPrivateKeySpec = new RSAPrivateKeySpec(asn1.getModulus(), asn1.getPrivateExponent());</span>
+<span class="fc" id="L228">    return (RSAPrivateKey) KeyFactory.getInstance(ALGO_RSA).generatePrivate(rsaPrivateKeySpec);</span>
+  }
+
+<span class="nc" id="L231">  @SneakyThrows</span>
+  public static RSAPrivateKey privateKeyPkcs8(final String pkcs8) {
+<span class="nc" id="L233">    final byte[] raw = CodecUtils.decodeBase64(dropComment(pkcs8, COMMENT_MARK));</span>
+<span class="nc" id="L234">    return (RSAPrivateKey) KeyFactory.getInstance(ALGO_RSA).generatePrivate(new PKCS8EncodedKeySpec(raw));</span>
+  }
+
+<span class="nc" id="L237">  @SneakyThrows</span>
+  public static RSAPublicKey publicKeyX509(final String x509) {
+<span class="fc" id="L239">    final byte[] raw = CodecUtils.decodeBase64(dropComment(x509, COMMENT_MARK));</span>
+<span class="fc" id="L240">    return (RSAPublicKey) KeyFactory.getInstance(ALGO_RSA).generatePublic(new X509EncodedKeySpec(raw));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

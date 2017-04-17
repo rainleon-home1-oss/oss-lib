@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jwt.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">Jwt.java</span></div><h1>Jwt.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import lombok.Getter;
+
+/**
+ * Created by zhanghaolun on 16/11/17.
+ */
+public class Jwt implements EncodeCipher {
+
+<span class="nc" id="L10">  @Getter</span>
+  private final JwtEncryptor encryptor;
+<span class="nc" id="L12">  @Getter</span>
+  private final JwtDecryptor decryptor;
+
+<span class="nc" id="L15">  public Jwt(final JwtEncryptor encryptor, final JwtDecryptor decryptor) {</span>
+<span class="nc" id="L16">    this.encryptor = encryptor;</span>
+<span class="nc" id="L17">    this.decryptor = decryptor;</span>
+<span class="nc" id="L18">  }</span>
+
+  public Jwt(final KeyExpression keyExpression) {
+<span class="nc" id="L21">    this( //</span>
+      new JwtEncryptor(keyExpression), //
+      new JwtDecryptor(keyExpression) //
+    );
+<span class="nc" id="L25">  }</span>
+
+  @Override
+  public String encrypt(final String plainText) {
+<span class="nc" id="L29">    return this.encryptor.encrypt(plainText);</span>
+  }
+
+  @Override
+  public String encrypt(final String plainText, final Integer maxAge) {
+<span class="nc" id="L34">    return this.encryptor.encrypt(plainText, maxAge);</span>
+  }
+
+  @Override
+  public String decrypt(final String encryptedAndEncoded) {
+<span class="nc" id="L39">    return this.decryptor.decrypt(encryptedAndEncoded);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

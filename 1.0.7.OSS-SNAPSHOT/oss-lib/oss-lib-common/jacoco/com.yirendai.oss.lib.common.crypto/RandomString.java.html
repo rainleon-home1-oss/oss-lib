@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RandomString.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">RandomString.java</span></div><h1>RandomString.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import java.util.Random;
+
+/**
+ * Created by zhanghaolun on 16/8/17.
+ */
+public interface RandomString {
+
+  String generate(int length);
+
+  /**
+   * Random strings.
+   *
+   * @author zhanghaolun
+   */
+<span class="pc" id="L17">  enum RandomStrings implements RandomString {</span>
+
+    /**
+     * 随机生成BASE62字符串.
+     */
+<span class="fc" id="L22">    RANDOM_BASE62(new RandomStringImpl(RandomStringImpl.BASE62));</span>
+
+    private final RandomStringImpl instance;
+
+<span class="fc" id="L26">    RandomStrings(final RandomStringImpl instance) {</span>
+<span class="fc" id="L27">      this.instance = instance;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    public String generate(final int length) {
+<span class="fc" id="L32">      return this.instance.generate(length);</span>
+    }
+  }
+
+  final class RandomStringImpl implements RandomString {
+
+    private static final String BASE62 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&quot;;
+
+    private final String base;
+
+<span class="fc" id="L42">    private RandomStringImpl(final String base) {</span>
+<span class="fc" id="L43">      this.base = base;</span>
+<span class="fc" id="L44">    }</span>
+
+    private static String random(final String base, final int length) {
+<span class="fc" id="L47">      final Random random = new Random();</span>
+<span class="fc" id="L48">      final StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">      for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L50">        final int number = random.nextInt(base.length());</span>
+<span class="fc" id="L51">        sb.append(base.charAt(number));</span>
+      }
+<span class="fc" id="L53">      return sb.toString();</span>
+    }
+
+    @Override
+    public String generate(final int length) {
+<span class="fc" id="L58">      return random(this.base, length);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtEncryptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oss-lib-common</a> &gt; <a href="index.source.html" class="el_package">com.yirendai.oss.lib.common.crypto</a> &gt; <span class="el_source">JwtEncryptor.java</span></div><h1>JwtEncryptor.java</h1><pre class="source lang-java linenums">package com.yirendai.oss.lib.common.crypto;
+
+import com.yirendai.oss.lib.common.Defaults;
+
+import io.jsonwebtoken.Jwts;
+
+import lombok.Getter;
+
+import org.joda.time.DateTime;
+
+import java.util.Date;
+
+/**
+ * Created by zhanghaolun on 16/11/17.
+ */
+public class JwtEncryptor implements EncodeEncryptor {
+
+<span class="nc" id="L18">  @Getter</span>
+  private final JwtKey key;
+
+<span class="nc" id="L21">  public JwtEncryptor(final KeyExpression keyExpression) {</span>
+<span class="nc" id="L22">    this.key = new JwtKey(keyExpression);</span>
+<span class="nc" id="L23">  }</span>
+
+  @Override
+  public String encrypt(final String plainText) {
+<span class="nc" id="L27">    throw new UnsupportedOperationException(&quot;jwt without maxAge is not supported.&quot;);</span>
+  }
+
+  @Override
+  public String encrypt(final String plainText, final Integer maxAge) {
+<span class="nc" id="L32">    return this.buildCompactJws(plainText, Defaults.now(), maxAge);</span>
+  }
+
+  public String buildCompactJws(final String token, final DateTime now, final Integer maxAge) {
+<span class="nc" id="L36">    final Date expiration = now.plusSeconds(maxAge).toDate();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">    return token != null ? Jwts.builder()</span>
+<span class="nc" id="L38">      .setSubject(token)</span>
+<span class="nc" id="L39">      .signWith(this.key.getSignatureAlgorithm(), this.key.getSignatureKey())</span>
+<span class="nc" id="L40">      .setExpiration(expiration)</span>
+<span class="nc" id="L41">      .compact() : null;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
