@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+oss-lib-test,com.yirendai.oss.lib.test,RestTemplateForTest,36,0,0,0,7,0,2,0,2,0
+oss-lib-test,com.yirendai.oss.lib.test,RestTemplateForTest14x,341,0,0,0,66,0,47,0,47,0
+oss-lib-test,com.yirendai.oss.lib.test,SpringDecoder,41,0,4,0,8,0,4,0,2,0
+oss-lib-test,com.yirendai.oss.lib.test,ResponseEntityDecoder,115,0,10,0,26,0,11,0,6,0
+oss-lib-test,com.yirendai.oss.lib.test,SpringDecoder.FeignResponseAdapter,64,0,0,0,17,0,9,0,9,0
