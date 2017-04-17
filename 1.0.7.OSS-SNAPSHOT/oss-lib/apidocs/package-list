@@ -1,0 +1,5 @@
+com.yirendai.oss.boot.autoconfigure
+com.yirendai.oss.lib.common
+com.yirendai.oss.lib.common.crypto
+com.yirendai.oss.lib.common.msginterpolate
+com.yirendai.oss.lib.test
