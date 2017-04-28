@@ -5,12 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.yirendai.infra</groupId>
+        <groupId>cn.home1</groupId>
         <artifactId>oss-lib</artifactId>
         <version>1.0.7.OSS-SNAPSHOT</version>
     </parent>
 
     <artifactId>oss-lib-test</artifactId>
+    <description>test lib of open source stack</description>
     <name>oss-lib-test</name>
     <packaging>jar</packaging>
 

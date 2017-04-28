@@ -23,7 +23,7 @@ buildscript {
 
 allprojects {
   //println "build.gradle allprojects ${project.name}"
-  group = 'com.yirendai.infra'
+  group = 'cn.home1'
 }
 
 subprojects {

@@ -38,6 +38,8 @@ _site/
 .factorypath
 .profiler
 git.properties
+codesigning.asc
+secring.gpg
 
 deprecated/
 **/src/site/markdown/README.md
