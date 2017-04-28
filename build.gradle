@@ -23,11 +23,13 @@ buildscript {
 
 allprojects {
   //println "build.gradle allprojects ${project.name}"
-  group = 'com.yirendai.infra'
+  group = 'cn.home1'
 }
 
 subprojects {
   //println "build.gradle subprojects ${project.name}"
+  //println "configurations.archives.allArtifacts: " + configurations.archives.allArtifacts
+
   apply from: "$rootDir/dependencies.gradle"
 
   dependencies {
