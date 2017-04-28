@@ -38,42 +38,6 @@ echo "eval \$(curl -s -L ${GIT_SERVICE}/${GIT_REPO_OWNER}/oss-build/raw/${BUILD_
 eval "$(curl -s -L ${GIT_SERVICE}/${GIT_REPO_OWNER}/oss-build/raw/${BUILD_SCRIPT_REF}/src/main/ci-script/ci.sh)"
 ### OSS CI CALL REMOTE CI SCRIPT END
 
-# home1-oss && not pr trigger will on condition
-if ([ "${GIT_REPO_OWNER}" == "${BUILD_HOME1_OSS_OWNER}" ] && [ "pull_request" != "${TRAVIS_EVENT_TYPE}" ]); then
-    case "$CI_BUILD_REF_NAME" in
-        "develop")
-            export BUILD_PUBLISH_CHANNEL="snapshot";
-            $@
-            gradle_action
-            ;;
-        release*)
-            export BUILD_PUBLISH_CHANNEL="release";
-            if [ "${1}" == "publish_snapshot" ]; then
-                publish_release ;
-                gradle_action "publish_release"
-            elif [ "${1}" == "analysis" ]; then
-                echo "skip analysis as not at develop branch";
-            else
-                $@;
-                gradle_action
-            fi
-            ;;
-        feature*|hotfix*|"master"|*)
-            if [ "${1}" == "test_and_build" ]; then
-                $@
-                gradle_action
-            fi
-            echo "on this condition only trigger test_and_build,CI_BUILD_REF_NAME=${CI_BUILD_REF_NAME}"
-            ;;
-    esac
-else
-    # the fork project only trigger test_and_build
-    if [ "${1}" == "test_and_build" ]; then
-        $@;
-        gradle_action
-    fi
-fi
-
 gradle_action() {
     local action="$1"
     VERSIONS=( "1.4.2.RELEASE" )
@@ -87,3 +51,39 @@ gradle_action() {
         fi
     done
 }
+
+# home1-oss && not pr trigger will on condition
+if ([ "${GIT_REPO_OWNER}" == "${BUILD_HOME1_OSS_OWNER}" ] && [ "pull_request" != "${TRAVIS_EVENT_TYPE}" ]); then
+    case "$CI_BUILD_REF_NAME" in
+        "develop")
+            export BUILD_PUBLISH_CHANNEL="snapshot";
+            $@
+            gradle_action "$@"
+            ;;
+        release*)
+            export BUILD_PUBLISH_CHANNEL="release";
+            if [ "${1}" == "publish_snapshot" ]; then
+                publish_release ;
+                gradle_action "publish_release"
+            elif [ "${1}" == "analysis" ]; then
+                echo "skip analysis as not at develop branch";
+            else
+                $@;
+                gradle_action "$@"
+            fi
+            ;;
+        feature*|hotfix*|"master"|*)
+            if [ "${1}" == "test_and_build" ]; then
+                $@
+                gradle_action "$@"
+            fi
+            echo "on this condition only trigger test_and_build,CI_BUILD_REF_NAME=${CI_BUILD_REF_NAME}"
+            ;;
+    esac
+else
+    # the fork project only trigger test_and_build
+    if [ "${1}" == "test_and_build" ]; then
+        $@;
+        gradle_action "$@"
+    fi
+fi
