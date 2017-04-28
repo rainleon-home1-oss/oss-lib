@@ -39,16 +39,11 @@ eval "$(curl -s -L ${GIT_SERVICE}/${GIT_REPO_OWNER}/oss-build/raw/${BUILD_SCRIPT
 ### OSS CI CALL REMOTE CI SCRIPT END
 
 gradle_action() {
-    local action="$1"
     VERSIONS=( "1.4.2.RELEASE" )
     export ORIGINAL_GRADLE_PROPERTIES="${GRADLE_PROPERTIES}"
     for version in "${VERSIONS[@]}"; do
         export GRADLE_PROPERTIES="${ORIGINAL_GRADLE_PROPERTIES} -PspringBootVersion=${version}"
-        if [ -n "${action}" ]; then
-            gradle_${action}
-        else
-            gradle_$@
-        fi
+        gradle_$@
     done
 }
 
@@ -56,26 +51,27 @@ gradle_action() {
 if ([ "${GIT_REPO_OWNER}" == "${BUILD_HOME1_OSS_OWNER}" ] && [ "pull_request" != "${TRAVIS_EVENT_TYPE}" ]); then
     case "$CI_BUILD_REF_NAME" in
         "develop")
-            export BUILD_PUBLISH_CHANNEL="snapshot";
+            export BUILD_PUBLISH_CHANNEL="snapshot"
             $@
-            gradle_action "$@"
+            gradle_action $@
             ;;
         release*)
-            export BUILD_PUBLISH_CHANNEL="release";
+            export BUILD_PUBLISH_CHANNEL="release"
             if [ "${1}" == "publish_snapshot" ]; then
-                publish_release ;
+                echo "publish_release"
+                publish_release
                 gradle_action "publish_release"
             elif [ "${1}" == "analysis" ]; then
-                echo "skip analysis as not at develop branch";
+                echo "skip analysis as not at develop branch"
             else
-                $@;
-                gradle_action "$@"
+                $@
+                gradle_action $@
             fi
             ;;
         feature*|hotfix*|"master"|*)
             if [ "${1}" == "test_and_build" ]; then
                 $@
-                gradle_action "$@"
+                gradle_action $@
             fi
             echo "on this condition only trigger test_and_build,CI_BUILD_REF_NAME=${CI_BUILD_REF_NAME}"
             ;;
@@ -83,7 +79,7 @@ if ([ "${GIT_REPO_OWNER}" == "${BUILD_HOME1_OSS_OWNER}" ] && [ "pull_request" !=
 else
     # the fork project only trigger test_and_build
     if [ "${1}" == "test_and_build" ]; then
-        $@;
-        gradle_action "$@"
+        $@
+        gradle_action $@
     fi
 fi
