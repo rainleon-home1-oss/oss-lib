@@ -28,6 +28,8 @@ allprojects {
 
 subprojects {
   //println "build.gradle subprojects ${project.name}"
+  //println "configurations.archives.allArtifacts: " + configurations.archives.allArtifacts
+
   apply from: "$rootDir/dependencies.gradle"
 
   dependencies {
