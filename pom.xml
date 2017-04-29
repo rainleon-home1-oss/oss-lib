@@ -16,19 +16,19 @@
     <url>https://github.com/home1-oss/oss-lib</url>
     <version>1.0.8.OSS-SNAPSHOT</version>
 
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/home1-oss/oss-lib</url>
+    </ciManagement>
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/home1-oss/oss-lib/issues</url>
+    </issueManagement>
     <scm>
         <connection>scm:git:https://github.com/home1-oss/oss-lib.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/home1-oss/oss-lib.git</developerConnection>
         <url>https://github.com/home1-oss/oss-lib</url>
     </scm>
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/home1-oss/oss-lib/issues</url>
-    </issueManagement>
-    <ciManagement>
-        <system>Travis CI</system>
-        <url>https://travis-ci.org/home1-oss/oss-lib</url>
-    </ciManagement>
 
     <modules>
         <module>oss-lib-common</module>

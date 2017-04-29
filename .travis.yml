@@ -21,9 +21,9 @@ branches:
 cache:
   directories:
   - "$HOME/.cache"
+  - "$HOME/.gradle"
   - "$HOME/.m2"
   - "$HOME/.sonar/cache"
-
 env:
   global:
 # if refer some release version please modify this var to oss-build version that has bean released, ex: v1.0.9.OSS
